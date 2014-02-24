@@ -1,0 +1,16 @@
+@(user: User)(content: Html)
+
+@views.html.main(user.userName){
+    <div id="site-container" class="context-loader-container" data-pjax-container="">
+        <div class="container">
+            <ul class="dashboard-tabs">
+                <li><a href="/" class="selected" data-selected-links=" /">News Feed</a></li>
+                <li><a href="/dashboard/pulls" class="js-selected-navigation-item " data-selected-links=" /dashboard/pulls">Pull Requests</a></li>
+                <li><a href="/dashboard/issues" class="js-selected-navigation-item">Issues</a></li>
+            </ul>
+        </div>
+        <div class="container">
+            @content
+        </div>
+    </div>
+}

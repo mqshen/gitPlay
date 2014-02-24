@@ -1,0 +1,67 @@
+@(baseUrl: String, repositoryInfo: RepositoryService.RepositoryInfo)
+@import helper._
+@views.html.helper.main(baseUrl, repositoryInfo){
+<div id="js-repo-pjax-container" class="repository-content context-loader-container" data-pjax-container="">
+    <span id="js-show-full-navigation"></span>
+
+    <div class="empty-repo">
+        <div class="callout">
+            <h2><strong>Quick setup</strong> — if you've done this kind of thing before</h2>
+            <hr>
+
+            <a href="http://mac.github.com" data-url="github-mac://openRepo/https://github.com/sh2enm3/testj" class="minibutton primary js-conduit-rewrite-url">
+                <span class="octicon octicon-device-desktop"></span> Set up in Desktop
+            </a>
+            <strong class="or-text">or</strong>
+
+            <div class="js-url-box url-box">
+                <span class="clone-urls js-clone-urls">
+                  <span class="http_clone_url clone-url-button js-clone-url-button selected">
+                      <a href="https://github.com/sh2enm3/testj.git" class="js-git-protocol-selector" data-permission="Read+Write" data-url="/users/set_protocol?protocol_selector=http&amp;protocol_type=push">HTTP</a>
+                  </span>
+                  <span class="private_clone_url clone-url-button js-clone-url-button">
+                    <a href="git@@github.com:sh2enm3/testj.git" class="js-git-protocol-selector" data-permission="Read+Write" data-url="/users/set_protocol?protocol_selector=ssh&amp;protocol_type=push">SSH</a>
+                  </span>
+                  <input type="text" readonly="" spellcheck="false" class="js-url-field url-field" value="@baseUrl/@repositoryInfo.owner/@(repositoryInfo.name).git">
+                  <span class="clone-url-button">
+                    <span class="js-zeroclipboard url-box-clippy minibutton zeroclipboard-button" data-clipboard-text="@baseUrl/@repositoryInfo.owner/@(repositoryInfo.name).git" data-copied-hint="copied!" title="copy to clipboard">
+                        <span class="octicon octicon-clippy">
+                        </span>
+                    </span>
+                  </span>
+                </span>
+            </div>
+
+        </div>
+
+        <p class="empty-repo-recommendations">
+            We recommend every repository include a
+            <a href="/@repositoryInfo.owner/@repositoryInfo.name/new/master?readme=1">README</a>,
+            <a href="/@repositoryInfo.owner/@repositoryInfo.name/new/master?filename=LICENSE.md">LICENSE</a>,
+            and <a href="/@repositoryInfo.owner/@repositoryInfo.name/new/master?filenam=.gitignore">.gitignore</a>.
+        </p>
+
+        <hr>
+
+        <div class="new-repo-cli-container markdown-body">
+            <h3>Create a new repository on the command line</h3>
+          <pre><code>touch README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin <span class="js-live-clone-url">@baseUrl/@repositoryInfo.owner/@(repositoryInfo.name).git</span>
+<span class="js-selectable-text">git push -u origin master</span></code></pre>
+
+            <h3>Push an existing repository from the command line</h3>
+          <pre><code>git remote add origin <span class="js-live-clone-url">@baseUrl/@repositoryInfo.owner/@(repositoryInfo.name).git</span>
+<span class="js-selectable-text">git push -u origin master</span></code></pre>
+
+
+        </div>
+
+    </div><!-- /.empty-repo -->
+
+
+
+</div>
+}

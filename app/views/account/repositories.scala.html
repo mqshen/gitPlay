@@ -1,0 +1,66 @@
+@(user: User, repostiroies: List[Repository], currentUser: Option[User])
+
+@main(user, 1, currentUser){
+<div class="repo-tab">
+    <div class="filter-bar">
+        <a href="/repositories/new" class="button primary new-repo">
+            <span class="octicon octicon-repo-create"></span>
+            New
+        </a>
+        <ul class="repo_filterer">
+            <li><a href="#" class="repo_filter js-repo-filter-tab" data-filter=".mirror">Mirrors</a></li>
+            <li><a href="#" class="repo_filter js-repo-filter-tab" data-filter=".fork">Forks</a></li>
+            <li><a href="#" class="repo_filter js-repo-filter-tab" data-filter=".source">Sources</a></li>
+            <li><a href="#" class="repo_filter js-repo-filter-tab" data-filter=".private">Private</a></li>
+            <li><a href="#" class="repo_filter js-repo-filter-tab" data-filter=".public">Public</a></li>
+            <li class="all_repos">
+                <a href="#" class="repo_filter js-repo-filter-tab filter-selected" data-filter=".public, .private">All</a>
+            </li>
+        </ul>
+
+        <form action="/search" class="repo-search js-profile-to-repo-search" data-login="mqshen">
+            <input type="text" id="your-repos-filter" name="q" class="filter_input js-filterable-field" placeholder="Find a repository…" tabindex="2">
+            <input type="submit" value="Search" class="button">
+        </form>
+    </div>
+
+    <ul class="repolist js-repo-list" data-filterable-for="your-repos-filter" data-filterable-type="substring">
+        @repostiroies.map { repository =>
+        <li class="public source">
+            <ul class="repo-stats">
+                <li class="stargazers">
+                    <a href="/@repository.userName/@repository.repositoryName/stargazers" title="Stargazers">
+                        <span class="octicon octicon-star"></span> 0
+                    </a>
+                </li>
+                <li class="forks">
+                    <a href="/@repository.userName/@repository.repositoryName/network" title="Forks">
+                        <span class="octicon octicon-git-branch"></span> 0
+                    </a>
+                </li>
+            </ul>
+            <span class="repolist-icon">
+               <span class="mega-octicon octicon-repo"></span>
+            </span>
+            <h3 class="repolist-name">
+                <a href="/@repository.userName/@repository.repositoryName">@repository.repositoryName</a>
+            </h3>
+            <div class="body">
+                <p class="description">
+                    @repository.description
+                </p>
+                <p class="updated-at">Last updated
+                    <time class="js-relative-date"
+                          data-title-format="YYYY-MM-DD HH:mm:ss"
+                          datetime="@repository.updatedDate"
+                          title="2014-02-20 17:21:53">4 days ago</time></p>
+
+                <div class="participation-graph">
+                    <canvas class="bars" data-color-all="#F5F5F5" data-color-owner="#DFDFDF" data-source="/@repository.userName/@repository.repositoryName/graphs/owner_participation" height="80" width="640"></canvas>
+                </div>
+            </div><!-- /.body -->
+        </li>
+        }
+    </ul>
+</div>
+}

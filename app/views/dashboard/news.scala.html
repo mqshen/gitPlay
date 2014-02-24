@@ -1,0 +1,45 @@
+@(user: User, activies: List[Activity], repositories: List[Repository])
+
+@main(user){
+    <div id="dashboard">
+        <div class="news">
+
+        </div>
+        <div class="dashboard-sidebar">
+            <div class="box box-small repos user-repos js-repo-filter" id="your_repos">
+                <div class="box-header">
+                    <a href="/repositories/new" class="minibutton primary new-repo">
+                        <span class="octicon octicon-repo-create"></span>
+                        New repository
+                    </a>            <h3 class="box-title">
+                    Your repositories <span class="box-title-count">(15)</span>
+                </h3>
+                </div>
+                <div class="box-body">
+                    <div class="filter-repos filter-bar">
+                        <input type="text" id="your-repos-filter" class="filter-input js-filterable-field" placeholder="Find a Repository…" tabindex="2">
+                        <ul class="repo-filterer">
+                            <li><a href="#" class="repo-filter js-repo-filter-tab filter-selected" data-filter=".public, li.private">All Repositories</a></li>
+                            <li><a href="#" class="repo-filter js-repo-filter-tab" data-filter=".public">Public</a></li>
+                            <li><a href="#" class="repo-filter js-repo-filter-tab" data-filter=".private">Private</a></li>
+                            <li><a href="#" class="repo-filter js-repo-filter-tab" data-filter=".source">Sources</a></li>
+                            <li><a href="#" class="repo-filter js-repo-filter-tab" data-filter=".fork">Forks</a></li>
+                        </ul>
+                    </div>
+                    <ul id="repo_listing" class="repo-list js-repo-list" data-filterable-for="your-repos-filter" data-filterable-type="substring">
+                        @repositories.map { repository =>
+                        <li class="public source">
+                            <a class="repo-list-item css-truncate" href="/@repository.userName/@repository.repositoryName">
+                                <span class="repo-icon octicon octicon-repo"></span>
+                                <span class="repo-and-owner css-truncate-target" title="/@repository.userName/@repository.repositoryName">
+                                  <span class="repo">@repository.repositoryName</span>
+                                </span>
+                            </a>
+                        </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}

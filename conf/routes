@@ -1,0 +1,36 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index
+GET     /login                      controllers.Application.login
+POST    /login                      controllers.Application.doLogin
+POST    /signup                     controllers.Application.signUp
+GET     /:userName                  controllers.AccountController.index(userName: String, tab: Option[String])
+
+GET     /dashboard/news             controllers.DashboardController.news
+
+GET     /repositories/new           controllers.RepositoryController.create
+POST    /repositories/new           controllers.RepositoryController.doCreate
+GET     /:userName/$repositoryName<[0-9a-zA-Z]+>     controllers.RepositoryController.detail(userName: String, repositoryName: String)
+GET     /:userName/$repositoryName<[0-9a-zA-Z]+>/commit/:commitId     controllers.RepositoryController.commit(userName: String, repositoryName: String, commitId: String)
+GET     /:userName/$repositoryName<[0-9a-zA-Z]+>/tree/:reversion/:path     controllers.RepositoryController.directory(userName: String, repositoryName: String, reversion: String, path: String)
+GET     /:userName/$repositoryName<[0-9a-zA-Z]+>/blob/:reversion/:path     controllers.RepositoryController.file(userName: String, repositoryName: String, reversion: String, path: String)
+
+GET     /:userName/$repositoryName<[0-9a-zA-Z]+>.git/info/refs      controllers.RepositoryController.git(userName: String, repositoryName: String, service: Option[String])
+GET     /:userName/$repositoryName<[0-9a-zA-Z]+>.git/HEAD           controllers.RepositoryController.gitHead(userName: String, repositoryName: String)
+GET     /:userName/$repositoryName<[0-9a-zA-Z]+>.git/objects/bc/:objectId   controllers.RepositoryController.gitObject(userName: String, repositoryName: String, objectId: String)
+POST    /:userName/$repositoryName<[0-9a-zA-Z]+>.git/git-receive-pack   controllers.RepositoryController.gitReceivePack(userName: String, repositoryName: String)
+POST    /:userName/$repositoryName<[0-9a-zA-Z]+>.git/git-upload-pack   controllers.RepositoryController.gitUploadPack(userName: String, repositoryName: String)
+
+
+GET     /:userName/$repositoryName<[0-9a-zA-Z]+>/issues     controllers.IssuesController.index(userName: String, repositoryName: String)
+GET     /:userName/$repositoryName<[0-9a-zA-Z]+>/issues/:filterBy/:filterValue     controllers.IssuesController.filter(userName: String, repositoryName: String, filterBy: String, filterValue: String, labels: Option[String])
+GET     /:userName/$repositoryName<[0-9a-zA-Z]+>/issues/new     controllers.IssuesController.create(userName: String, repositoryName: String)
+POST    /:userName/$repositoryName<[0-9a-zA-Z]+>/issues/new     controllers.IssuesController.doCreate(userName: String, repositoryName: String)
+
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

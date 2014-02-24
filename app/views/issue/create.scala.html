@@ -1,0 +1,368 @@
+@(baseUrl: String, repositoryInfo: RepositoryService.RepositoryInfo, user: Option[User] = None)
+@import helper._
+@views.html.helper.main(baseUrl, repositoryInfo, user){
+<div id="issues_next">
+<div class="tabnav tabnav-issues">
+    <div class="tabnav-right">
+        <div class="tabnav-widget selected">
+            <a href="#" class="button minibutton primary selected bigger js-new-issue-button" style="cursor:default">New Issue</a>
+        </div>
+    </div>
+
+    <ul class="tabnav-tabs">
+        <li><a href="/@repositoryInfo.owner/@repositoryInfo.name/issues" class="tabnav-tab ">Browse Issues</a></li>
+        <li><a href="/@repositoryInfo.owner/@repositoryInfo.name/issues/milestones" class="tabnav-tab ">Milestones</a></li>
+    </ul>
+</div>
+
+@helper.form(action = routes.IssuesController.doCreate(repositoryInfo.owner, repositoryInfo.name), 'class -> "js-braintree-encrypt") {
+<div style="margin:0;padding:0;display:inline">
+    <input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk=">
+</div>
+<div class="columns discussion-timeline-cols">
+<div class="column main">
+
+
+<div class="discussion-bubble composer">
+<a href="/@repositoryInfo.owner">
+    <img alt="miaoqi shen" class="discussion-bubble-avatar js-avatar" data-user="687580" height="48" src="https://0.gravatar.com/avatar/574f047760ff87f6aefebdfa40eeb07a?d=https%3A%2F%2Fidenticons.github.com%2Ffdeed6355bac156322c8b90d9e90400b.png&amp;r=x&amp;s=140" width="48">
+</a>
+
+<div class="discussion-bubble-content bubble">
+<div class="discussion-bubble-inner">
+
+<div class="discussion-topic">
+
+
+<div class="discussion-topic-header">
+    <dl class="form">
+        <div class="fieldWithErrors">
+            <label class="hidden" for="issue_title">Title</label>
+        </div>
+        <dd>
+            <div class="fieldWithErrors">
+                <input autofocus="autofocus" class="input-large required title js-auto-save" id="issue_title" name="title" placeholder="Title" required="required" size="30" tabindex="1" type="text">
+            </div>
+        </dd>
+    </dl>
+</div> <!-- /.topic-comment-header -->
+
+
+<div class="composer-infobar js-infobar">
+
+    <div class="assignee infobar-widget">
+      <span class="css-truncate text js-assignee-infobar-item-wrapper">
+          No one is assigned
+      </span>
+
+
+        <div class="select-menu js-menu-container js-select-menu js-composer-assignee-picker ">
+        <span class="minibutton select-menu-button icon-only js-menu-target" role="button" aria-label="Assign someone to this issue" aria-haspopup="true">
+          <span class="octicon octicon-gear"></span>
+        </span>
+
+            <div class="select-menu-modal-holder js-menu-content js-navigation-container" aria-hidden="true">
+
+                <div class="select-menu-modal">
+                    <div class="select-menu-header">
+                        <span class="select-menu-title">Assign someone to this issue</span>
+                        <span class="octicon octicon-remove-close js-menu-close"></span>
+                    </div> <!-- /.select-menu-header -->
+
+
+
+                    <div class="select-menu-error-shell">
+                        <span class="select-menu-error js-select-menu-error">Sorry, an error occurred</span>
+                    </div>
+
+                    <div class="select-menu-filters">
+                        <div class="select-menu-text-filter">
+                            <input type="text" id="assignee-filter-field" class="js-filterable-field js-navigation-enable" placeholder="Filter people" aria-label="Type or choose a name">
+                        </div>
+                    </div> <!-- /.select-menu-filters -->
+
+
+                    <div class="select-menu-list">
+
+                        <div class="select-menu-clear-item select-menu-item js-navigation-item js-clear-assignee js-no-current-assignee" role="button" aria-label="Clear assignee">
+                            <input name="issue[assignee]" type="radio" value="">
+                            <span class="select-menu-item-icon octicon octicon-remove-close"></span>
+                            <div class="select-menu-item-text">Clear assignee</div>
+                        </div> <!-- /.select-menu-item -->
+
+                        <div data-filterable-for="assignee-filter-field" data-filterable-type="fuzzy" role="menu">
+                            <div class="select-menu-item js-navigation-item" role="menuitem">
+                                <input name="issue[assignee]" type="radio" value="@repositoryInfo.owner">
+                                <span class="select-menu-item-icon octicon octicon-check"></span>
+
+                                <div class="select-menu-item-gravatar js-select-menu-item-gravatar">
+                                    <span class="avatar">
+                                        <img alt="miaoqi shen" class=" js-avatar" data-user="687580" height="20" src="https://0.gravatar.com/avatar/574f047760ff87f6aefebdfa40eeb07a?d=https%3A%2F%2Fidenticons.github.com%2Ffdeed6355bac156322c8b90d9e90400b.png&amp;r=x&amp;s=140" width="20">
+                                    </span>
+                                </div>
+
+                                <div class="select-menu-item-text">
+                                    <h4>@repositoryInfo.owner <span class="description">miaoqi shen</span></h4>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="select-menu-no-results">Nothing to show</div>
+
+                    </div> <!-- /.select-menu-list -->
+
+
+
+
+                </div> <!-- /.select-menu-modal -->
+            </div> <!-- /.select-menu-modal-holder -->
+        </div> <!-- /.select-menu -->
+
+    </div>
+
+    <div class="milestone infobar-widget">
+      <span class="css-truncate text js-composer-milestone-title">
+          No milestone
+      </span>
+
+        <div class="select-menu js-menu-container js-select-menu js-composer-milestone-picker">
+        <span class="minibutton select-menu-button icon-only js-menu-target" role="button" aria-label="Set milestone" aria-haspopup="true">
+          <span class="octicon octicon-gear"></span>
+        </span>
+
+            <div class="select-menu-modal-holder js-menu-content js-navigation-container" aria-hidden="true">
+
+                <div class="select-menu-modal">
+                    <div class="select-menu-header">
+                        <span class="select-menu-title">Set milestone</span>
+                        <span class="octicon octicon-remove-close js-menu-close"></span>
+                    </div> <!-- /.select-menu-header -->
+
+
+
+                    <div class="select-menu-error-shell"><span class="select-menu-error js-select-menu-error">Sorry, an error occurred</span></div>
+
+                    <div class="select-menu-filters">
+                        <div class="select-menu-text-filter">
+                            <input type="text" id="context-milestone-filter-field" class="js-filterable-field js-navigation-enable" placeholder="Filter milestones" autocomplete="off">
+                        </div>
+                        <div class="select-menu-tabs">
+                            <ul>
+                                <li class="select-menu-tab">
+                                    <a href="#" data-tab-filter="tab-open" class="js-select-menu-tab">Open</a>
+                                </li>
+                                <li class="select-menu-tab">
+                                    <a href="#" data-tab-filter="tab-closed" class="js-select-menu-tab">Closed</a>
+                                </li>
+                            </ul>
+                        </div><!-- /.select-menu-tabs -->
+                    </div><!-- /.select-menu-filters -->
+
+                    <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="tab-open">
+
+                        <div class="select-menu-clear-item select-menu-item js-navigation-item js-clear-milestone">
+                            <input id="milestone_clear" name="milestone" type="radio" value="clear">
+                            <span class="select-menu-item-icon octicon octicon-remove-close"></span>
+                            <div class="select-menu-item-text">Clear this milestone</div>
+                        </div> <!-- /.select-menu-item -->
+
+                        <div data-filterable-for="context-milestone-filter-field" data-filterable-type="substring" role="menu">
+
+                        </div>
+
+                        <div class="select-menu-item select-menu-new-item-form js-navigation-item js-new-item-form">
+                            <input type="radio" name="milestone" value="new">
+                            <input type="hidden" class="js-new-item-value" name="milestone_title">
+
+                            <span class="octicon octicon-milestone select-menu-item-icon"></span>
+                            <div class="select-menu-item-text">
+                                <h4>Create and assign to new milestone:</h4>
+                                <span class="description js-new-item-name js-milestone-title"></span>
+                            </div>
+                        </div>
+
+                        <div class="select-menu-no-results">Nothing to show</div>
+                    </div> <!-- /.select-menu-list -->
+
+                    <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="tab-closed">
+
+                        <div data-filterable-for="context-milestone-filter-field" data-filterable-type="substring" role="menu">
+
+                        </div>
+
+                        <div class="select-menu-no-results">Nothing to show</div>
+                    </div> <!-- /.select-menu-list -->
+
+
+                    <div class="fieldWithErrors"><input id="issue_milestone_id" name="issue[milestone_id]" type="hidden"></div>
+                    <input id="new_milestone_title" name="new_milestone_title" type="hidden">
+                </div> <!-- /.select-menu-modal -->
+            </div> <!-- /.select-menu-modal-holder -->
+        </div> <!-- /.select-menu -->
+
+    </div>
+</div>
+
+
+<div class="comment-content">
+
+    <dl class="form body">
+        <dd>
+            <div class="js-previewable-comment-form previewable-comment-form write-selected" data-preview-url="/preview?repository=16544892">
+                <div class="comment-form-head tabnav">
+                    <ul class="tabnav-tabs">
+                        <li><a href="#write_bucket_" class="tabnav-tab write-tab js-write-tab selected">Write</a></li>
+                        <li><a href="#preview_bucket_" class="tabnav-tab preview-tab js-preview-tab">Preview</a></li>
+                    </ul>
+                    <span class="tabnav-right">
+                      <span class="tabnav-widget text">Comments are parsed with <a href="https://help.github.com/articles/github-flavored-markdown" class="gfm-help" target="_blank">GitHub Flavored Markdown</a></span>
+                    </span>
+                </div>
+
+                <div class="comment-form-error js-comment-form-error" style="display:none">    There was an error creating your Issue:
+                </div>
+                <div id="write_bucket_" class="write-content js-write-bucket js-uploadable-container upload-enabled is-default" data-model="assets">
+
+                    <a href="#fullscreen_issue_body" class="enable-fullscreen js-enable-fullscreen tooltipped tooltipped-w " aria-label="Zen Mode" original-title="">
+                        <span class="octicon octicon-screen-full"></span>
+                    </a>
+                    <textarea name="body" tabindex="1" id="issue_body" placeholder="Leave a comment" class="comment-form-textarea js-comment-field js-size-to-fit js-quote-selection-target input-with-fullscreen-icon" data-suggester="_new_preview_suggester"></textarea>
+
+
+                    <p class="drag-and-drop">
+                        <span class="default">
+                            Attach images by dragging &amp; dropping,
+                            <input type="file" multiple="multiple" class="manual-file-chooser js-manual-file-chooser">
+                            <a class="manual-file-chooser-text" href="#">selecting them</a>, or pasting
+                            from the clipboard.
+                        </span>
+                        <span class="loading">
+                          <img alt="Octocat-spinner-32" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16"> Uploading your images…
+                        </span>
+                        <span class="error bad-file">
+                          Unfortunately we don't support that file type yet. Please use PNG, GIF, or JPG.
+                        </span>
+                        <span class="error too-big">
+                          Yowza, that's a big file. Please submit an image file smaller than 5MB.
+                        </span>
+                        <span class="error bad-browser">
+                          This browser doesn't support image attachments.
+                        </span>
+                        <span class="error failed-request">
+                          Something went really wrong and we can't process that image.
+                        </span>
+                    </p>
+
+                </div>
+                <div id="preview_bucket_" class="preview-content js-preview-bucket">
+
+
+                    <div id="openstruct-69982692706340" class="comment js-comment js-task-list-container" data-body-version="">
+
+                        <div class="comment-content">
+
+                            <div class="edit-comment-hide">
+                                <div class="comment-body markdown-body  js-comment-body">
+                                    <p>Nothing to preview</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <div class="suggester-container">
+                    <div class="suggester js-navigation-container" id="_new_preview_suggester" data-url="/@repositoryInfo.owner/@repositoryInfo.name/suggestions/issue">
+                    </div>
+                </div>
+            </div>
+
+        </dd>
+    </dl>
+
+</div> <!-- /.comment-content -->
+</div> <!-- /.comment -->
+</div> <!-- /.discussion-bubble-content -->
+</div> <!-- /.discussion-bubble-inner -->
+
+<div class="form-actions">
+    <button type="submit" class="button primary" tabindex="1" data-disable-invalid="" data-disable-with="" >
+        Submit new issue
+    </button>
+</div>
+
+</div> <!-- /.discussion-bubble -->
+
+</div>
+<div class="column sidebar">
+
+    <h3>Add Labels</h3>
+    <ul class="js-composer-labels color-label-list filter-list small">
+
+        <li data-name="bug">
+            <a href="#" class="filter-item color-label labelstyle-fc2929">
+
+                <input style="display: none" type="checkbox" value="bug" id="issue_labels_bug" name="issue[labels][]">
+                <span class="color" style="background-color: #fc2929">&nbsp;</span>
+                <span class="name">bug</span>
+            </a>
+        </li>
+
+        <li data-name="duplicate">
+            <a href="#" class="filter-item color-label labelstyle-cccccc">
+
+                <input style="display: none" type="checkbox" value="duplicate" id="issue_labels_duplicate" name="issue[labels][]">
+                <span class="color" style="background-color: #cccccc">&nbsp;</span>
+                <span class="name">duplicate</span>
+            </a>
+        </li>
+
+        <li data-name="enhancement">
+            <a href="#" class="filter-item color-label labelstyle-84b6eb">
+
+                <input style="display: none" type="checkbox" value="enhancement" id="issue_labels_enhancement" name="issue[labels][]">
+                <span class="color" style="background-color: #84b6eb">&nbsp;</span>
+                <span class="name">enhancement</span>
+            </a>
+        </li>
+
+        <li data-name="invalid">
+            <a href="#" class="filter-item color-label labelstyle-e6e6e6">
+
+                <input style="display: none" type="checkbox" value="invalid" id="issue_labels_invalid" name="issue[labels][]">
+                <span class="color" style="background-color: #e6e6e6">&nbsp;</span>
+                <span class="name">invalid</span>
+            </a>
+        </li>
+
+        <li data-name="question">
+            <a href="#" class="filter-item color-label labelstyle-cc317c">
+
+                <input style="display: none" type="checkbox" value="question" id="issue_labels_question" name="issue[labels][]">
+                <span class="color" style="background-color: #cc317c">&nbsp;</span>
+                <span class="name">question</span>
+            </a>
+        </li>
+
+        <li data-name="wontfix">
+            <a href="#" class="filter-item color-label labelstyle-ffffff">
+
+                <input style="display: none" type="checkbox" value="wontfix" id="issue_labels_wontfix" name="issue[labels][]">
+                <span class="color" style="background-color: #ffffff">&nbsp;</span>
+                <span class="name">wontfix</span>
+            </a>
+        </li>
+
+    </ul>
+
+</div>
+</div>
+}
+</div>
+}

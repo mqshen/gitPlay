@@ -1,0 +1,274 @@
+@(baseUrl: String, reversion: String, repositoryInfo: RepositoryService.RepositoryInfo, files: List[JGitUtil.FileInfo], readme: Option[String], lastCommit: JGitUtil.CommitInfo, user: Option[User] = None)
+
+@import helper._
+@views.html.helper.main(baseUrl, repositoryInfo, user){
+<div class="repository-meta js-details-container ">
+    <div class="repository-description js-details-show">
+        <p>@repositoryInfo.repository.description</p>
+    </div>
+    <span class="edit-link js-details-show js-details-target">— <a href="#">Edit</a></span>
+    <form accept-charset="UTF-8" action="/@repositoryInfo.owner/@repositoryInfo.name/settings/update_meta" class="edit-repository-meta js-details-edit" method="post">
+        <div style="margin:0;padding:0;display:inline">
+            <input name="_method" type="hidden" value="put">
+            <input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk="></div>
+
+        <div class="field description-field">
+            <label for="repo_description">Description</label>
+            <input type="text" name="repo_description" value="项目协作" placeholder="Short description of this repository">
+        </div>
+
+        <div class="field website-field">
+            <label for="repo_homepage">Website</label>
+            <input type="text" name="repo_homepage" value="" placeholder="Website for this repository (optional)">
+        </div>
+
+        <button class="button classy">Save</button>
+        <span class="cancel">or <a href="#" class="js-details-target">cancel</a></span>
+    </form>
+</div>
+<div class="capped-box overall-summary ">
+    <div class="stats-switcher-viewport js-stats-switcher-viewport">
+        <ul class="numbers-summary">
+            <li class="commits">
+                <a data-pjax="" href="/@repositoryInfo.owner/MyTask/commits/master">
+            <span class="num">
+              <span class="octicon octicon-history"></span>
+                @repositoryInfo.commitCount
+            </span>
+                    commits
+                </a>
+            </li>
+            <li>
+                <a data-pjax="" href="/@repositoryInfo.owner/MyTask/branches">
+                    <span class="num">
+                      <span class="octicon octicon-git-branch"></span>
+                        @repositoryInfo.branchList.size
+                    </span>
+                    branch
+                </a>
+            </li>
+
+            <li>
+                <a data-pjax="" href="/@repositoryInfo.owner/MyTask/releases">
+                    <span class="num">
+                      <span class="octicon octicon-tag"></span>
+                      0
+                    </span>
+                    releases
+                </a>
+            </li>
+
+            <li>
+
+                <a href="/@repositoryInfo.owner/MyTask/graphs/contributors">
+                    <span class="num">
+                      <span class="octicon octicon-organization"></span>
+                      1
+                    </span>
+                    contributor
+                </a>
+            </li>
+        </ul>
+
+        <div class="repository-lang-stats">
+            <ol class="repository-lang-stats-numbers">
+                <li>
+                    <a href="/@repositoryInfo.owner/MyTask/search?l=javascript">
+                        <span class="color-block language-color" style="background-color:#f15501;"></span>
+                        <span class="lang">JavaScript</span>
+                        <span class="percent">51.0%</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/@repositoryInfo.owner/MyTask/search?l=css">
+                        <span class="color-block language-color" style="background-color:#1f085e;"></span>
+                        <span class="lang">CSS</span>
+                        <span class="percent">24.7%</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/@repositoryInfo.owner/MyTask/search?l=python">
+                        <span class="color-block language-color" style="background-color:#3581ba;"></span>
+                        <span class="lang">Python</span>
+                        <span class="percent">24.1%</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/@repositoryInfo.owner/MyTask/search?l=perl">
+                        <span class="color-block language-color" style="background-color:#0298c3;"></span>
+                        <span class="lang">Perl</span>
+                        <span class="percent">0.1%</span>
+                    </a>
+                </li>
+            </ol>
+        </div>
+    </div>
+</div>
+<div class="tooltipped tooltipped-s" aria-label="Show language statistics" original-title="">
+    <a href="#" class="repository-lang-stats-graph js-toggle-lang-stats" style="background-color:#0298c3">
+        <span class="language-color" style="width:51.0%; background-color:#f15501;" itemprop="keywords">JavaScript</span>
+        <span class="language-color" style="width:24.7%; background-color:#1f085e;" itemprop="keywords">CSS</span>
+        <span class="language-color" style="width:24.1%; background-color:#3581ba;" itemprop="keywords">Python</span>
+        <span class="language-color" style="width:0.1%; background-color:#0298c3;" itemprop="keywords">Perl</span>
+    </a>
+</div>
+
+<div class="file-navigation in-mid-page">
+    <a href="/@repositoryInfo.owner/MyTask/compare" aria-label="Compare, review, create a pull request" class="minibutton compact primary tooltipped tooltipped-s" data-pjax="" original-title="">
+        <span class="octicon octicon-git-compare"></span>
+    </a>
+    <div class="select-menu js-menu-container js-select-menu">
+        <span class="minibutton select-menu-button js-menu-target" data-hotkey="w" data-master-branch="master" data-ref="master" role="button" aria-label="Switch branches or tags" tabindex="0" aria-haspopup="true">
+          <span class="octicon octicon-git-branch"></span>
+          <i>branch:</i>
+          <span class="js-select-button">master</span>
+        </span>
+        <div class="select-menu-modal-holder js-menu-content js-navigation-container" data-pjax="" aria-hidden="true">
+            <div class="select-menu-modal">
+                <div class="select-menu-header">
+                    <span class="select-menu-title">Switch branches/tags</span>
+                    <span class="octicon octicon-remove-close js-menu-close"></span>
+                </div> <!-- /.select-menu-header -->
+
+                <div class="select-menu-filters">
+                    <div class="select-menu-text-filter">
+                        <input type="text" aria-label="Find or create a branch…" id="context-commitish-filter-field" class="js-filterable-field js-navigation-enable" placeholder="Find or create a branch…">
+                    </div>
+                    <div class="select-menu-tabs">
+                        <ul>
+                            <li class="select-menu-tab">
+                                <a href="#" data-tab-filter="branches" class="js-select-menu-tab">Branches</a>
+                            </li>
+                            <li class="select-menu-tab">
+                                <a href="#" data-tab-filter="tags" class="js-select-menu-tab">Tags</a>
+                            </li>
+                        </ul>
+                    </div><!-- /.select-menu-tabs -->
+                </div><!-- /.select-menu-filters -->
+
+                <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="branches">
+
+                    <div data-filterable-for="context-commitish-filter-field" data-filterable-type="substring">
+
+
+                        <div class="select-menu-item js-navigation-item selected">
+                            <span class="select-menu-item-icon octicon octicon-check"></span>
+                            <a href="/@repositoryInfo.owner/MyTask/tree/master" data-name="master" data-skip-pjax="true" rel="nofollow" class="js-navigation-open select-menu-item-text js-select-button-text css-truncate-target" title="master">master</a>
+                        </div> <!-- /.select-menu-item -->
+                    </div>
+
+                    <form accept-charset="UTF-8" action="/@repositoryInfo.owner/MyTask/branches" class="js-create-branch select-menu-item select-menu-new-item-form js-navigation-item js-new-item-form" method="post"><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk="></div>
+                        <span class="octicon octicon-git-branch-create select-menu-item-icon"></span>
+                        <div class="select-menu-item-text">
+                            <h4>Create branch: <span class="js-new-item-name"></span></h4>
+                            <span class="description">from ‘master’</span>
+                        </div>
+                        <input type="hidden" name="name" id="name" class="js-new-item-value">
+                        <input type="hidden" name="branch" id="branch" value="master">
+                        <input type="hidden" name="path" id="path" value="">
+                    </form> <!-- /.select-menu-item -->
+
+                </div> <!-- /.select-menu-list -->
+
+                <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="tags">
+                    <div data-filterable-for="context-commitish-filter-field" data-filterable-type="substring">
+
+
+                    </div>
+
+                    <div class="select-menu-no-results">Nothing to show</div>
+                </div> <!-- /.select-menu-list -->
+
+            </div> <!-- /.select-menu-modal -->
+        </div> <!-- /.select-menu-modal-holder -->
+    </div> <!-- /.select-menu -->
+
+
+    <div class="breadcrumb">
+        <span class="repo-root js-repo-root">
+            <span itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="/@repositoryInfo.owner/MyTask" data-branch="master" data-direction="back" data-pjax="true" itemscope="url">
+                    <span itemprop="title">@repositoryInfo.name</span>
+                </a>
+            </span>
+        </span>
+        <span class="separator"> / </span>
+        <form action="/@repositoryInfo.owner/@repositoryInfo.name/new/master" aria-label="Create a new file here" class="js-new-blob-form tooltipped tooltipped-e new-file-link" method="post" original-title="">
+            <span aria-label="Create a new file here" class="js-new-blob-submit octicon octicon-file-add" data-test-id="create-new-git-file" role="button">
+            </span>
+        </form>
+    </div>
+</div>
+<div class="bubble files-bubble">
+    <div class="commit commit-tease js-details-container">
+        <p class="commit-title ">
+            <a href="/@repositoryInfo.owner/MyTask/commit/@lastCommit.id" class="message" data-pjax="true" title="@lastCommit.summary">@lastCommit.summary</a>
+        </p>
+        <div class="commit-meta">
+            <span aria-label="Copy SHA" class="js-zeroclipboard zeroclipboard-link" data-clipboard-text="@lastCommit.id" data-copied-hint="copied!"><span class="octicon octicon-clippy"></span></span>
+            <a href="/@repositoryInfo.owner/@repositoryInfo.owner/commit/@lastCommit.id" class="sha-block" data-pjax="">latest commit <span class="sha">@lastCommit.sha</span></a>
+
+            <div class="authorship">
+                <img alt="miaoqi shen" class="gravatar js-avatar" data-user="687580" height="20" src="https://2.gravatar.com/avatar/574f047760ff87f6aefebdfa40eeb07a?d=https%3A%2F%2Fidenticons.github.com%2Ffdeed6355bac156322c8b90d9e90400b.png&amp;r=x&amp;s=140" width="20">
+                <span class="author-name">
+                    <a href="/@repositoryInfo.owner" data-skip-pjax="true" rel="author">@repositoryInfo.owner</a>
+                </span>
+                authored
+                <time class="js-relative-date updated" data-title-format="YYYY-MM-DD HH:mm:ss" datetime="2014-01-20T06:28:17-08:00" title="2014-01-20 22:28:17">a month ago</time>
+            </div>
+        </div>
+    </div>
+    <table class="files" data-pjax="">
+        <tbody class="" data-url="/@repositoryInfo.owner/@repositoryInfo.name/file-list/master">
+            @files.map { file =>
+            <tr>
+                <td class="icon">
+                    @if(file.isDirectory) {
+                    <span class="octicon octicon-file-directory"></span>
+                    <img alt="Octocat-spinner-32" class="spinner" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
+                    } else {
+                    <span class="octicon octicon-file-text"></span>
+                    <img alt="Octocat-spinner-32" class="spinner" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
+                    }
+                </td>
+                <td class="content">
+                    <span class="css-truncate css-truncate-target">
+                    @if(file.isDirectory) {
+                        <a href="/@repositoryInfo.owner/@repositoryInfo.name/tree/master/@file.name"
+                           class="js-directory-link"
+                           id="s"
+                           title="@file.name">@file.name</a>
+                    } else {
+                        <a href="/@repositoryInfo.owner/@repositoryInfo.name/blob/master/@file.name"
+                           class="js-directory-link"
+                           id="s"
+                           title="@file.name">@file.name</a>
+                    }
+                    </span>
+                </td>
+                <td class="message">
+                    <span class="css-truncate css-truncate-target">
+                        <a href="/@repositoryInfo.owner/@repositoryInfo.name/commit/@file.commitId"
+                           class="message" data-pjax="true" title="@file.message">@file.message</a>
+                    </span>
+                </td>
+                <td class="age">
+                    <span class="css-truncate css-truncate-target">
+                        <time class="js-relative-date" data-title-format="YYYY-MM-DD HH:mm:ss" datetime="@file.time" title="@file.time">a month ago</time>
+                    </span>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div id="readme" class="clearfix announce instapaper_body md">
+    <span class="name">
+      <span class="octicon octicon-book"></span>
+      README.md
+    </span>
+    <article class="markdown-body entry-content" itemprop="mainContentOfPage">
+        @readme
+    </article>
+</div>
+}

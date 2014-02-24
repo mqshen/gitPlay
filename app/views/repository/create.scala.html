@@ -1,0 +1,114 @@
+@(user: User, form: Form[Repository])
+
+@import helper._
+
+@views.html.main("", "logged_in  env-production macintosh  page-new-repo tipsy-tooltips"){
+<div id="site-container" class="context-loader-container" data-pjax-container="">
+    <div class="new-repo-container">
+        @helper.form(action = routes.RepositoryController.doCreate, 'class -> "js-braintree-encrypt") {
+        <div class="owner-reponame clearfix">
+            <div class="icon-preview icon-preview-public js-icon-preview-public" style="display: block;">
+                <span class="label">public</span>
+                <span class="mega-octicon octicon-repo"></span>
+            </div>
+            <div class="icon-preview icon-preview-private js-icon-preview-private" style="display: none;">
+                <span class="label"><span>private</span></span>
+                <span class="mega-octicon octicon-lock"></span>
+            </div>
+            <dl class="form owner">
+                <dt><label for="repository_owner">Owner</label></dt>
+                <dd>
+                    <div class="select-menu js-menu-container js-select-menu js-owner-container">
+                      <span class="minibutton select-menu-button with-gravatar js-menu-target">
+                        <div class="select-menu-button-gravatar js-select-button-gravatar">
+                            <img alt="@user.fullName" class=" js-avatar" data-user="687580" height="20" src="https://0.gravatar.com/avatar/574f047760ff87f6aefebdfa40eeb07a?d=https%3A%2F%2Fidenticons.github.com%2Ffdeed6355bac156322c8b90d9e90400b.png&amp;r=x&amp;s=140" width="20">
+                        </div>
+                        <span class="js-select-button">mqshen</span>
+                      </span>
+                        <div class="select-menu-modal-holder js-menu-content js-navigation-container">
+                            <div class="select-menu-modal">
+                                <div class="select-menu-header">
+                                    <span class="select-menu-title">Choose another owner</span>
+                                    <span class="octicon octicon-remove-close js-menu-close"></span>
+                                </div> <!-- /.select-menu-header -->
+
+                                <div class="select-menu-list">
+
+                                    <div class="select-menu-item js-navigation-item selected" data-default="public" data-permission="yes">
+                                        <input checked="checked" id="owner_mqshen" name="owner" type="radio" value="mqshen">
+                                        <span class="select-menu-item-icon octicon octicon-check"></span>
+                                        <div class="select-menu-item-gravatar js-select-menu-item-gravatar">
+                                            <img alt="miaoqi shen" class=" js-avatar" data-user="687580" height="20" src="https://0.gravatar.com/avatar/574f047760ff87f6aefebdfa40eeb07a?d=https%3A%2F%2Fidenticons.github.com%2Ffdeed6355bac156322c8b90d9e90400b.png&amp;r=x&amp;s=140" width="20">
+                                        </div>
+                                        <div class="select-menu-item-text js-select-button-text">
+                                            mqshen
+                                        </div>
+                                    </div> <!-- /.select-menu-item -->
+
+
+                                </div> <!-- /.select-menu-list -->
+
+                            </div> <!-- /.select-menu-modal -->
+                        </div> <!-- /.select-menu-modal-holder -->
+                    </div> <!-- /.select-menu -->
+
+                </dd>
+            </dl>
+            <span class="slash with-permission-fields">/</span>
+            <dl class="form reponame">
+                <dt class="input-label">
+                    <div class="fieldWithErrors">
+                        <label autocapitalize="off" class="js-repo-name short with-permission-fields" data-autocheck-url="/repositories/check-name" for="repository_name" maxlength="100" tabindex="2">Repository name</label>
+                    </div>
+                </dt>
+                <dd>
+                    <div class="fieldWithErrors">
+                        <input autocapitalize="off" class="js-repo-name short with-permission-fields" data-autocheck-url="/repositories/check-name?owner=mqshen" id="repository_name" maxlength="100" name="name" size="100" tabindex="2" type="text">
+                    </div>
+                </dd>
+            </dl>
+        </div>
+        <div class="with-permission-fields">
+
+            <p class="subdued">
+                Great repository names are short and memorable. Need inspiration? How about
+                <strong class="reponame-suggestion js-reponame-suggestion">finna-be-lana</strong>.
+            </p>
+            <!-- description field -->
+            <dl class="form">
+                <dt><label for="repository_description">Description</label> <span class="note">(optional)</span></dt>
+                <dd>
+                    <div class="fieldWithErrors"><input class="long" id="repository_description" name="description" size="30" tabindex="4" type="text"></div>
+                </dd>
+            </dl>
+
+            <hr>
+            <div class="form-checkbox">
+                <label>
+                    <div class="fieldWithErrors"><input checked="checked" class="js-privacy-toggle" id="repository_public_true" name="public" tabindex="5" type="radio" value="true"></div>
+                    Public
+                </label>
+                <span class="mega-octicon octicon-repo"></span>
+                <span class="note">
+                    Anyone can see this repository. You choose who can commit.
+                </span>
+            </div>
+            <div class="form-checkbox">
+                <label>
+                    <div class="fieldWithErrors"><input class="js-privacy-toggle" id="repository_public_false" name="repository[public]" tabindex="5" type="radio" value="false"></div>
+                    Private
+                </label>
+                <span class="mega-octicon octicon-lock"></span>
+                <span class="note">
+                  You choose who can see and commit to this repository.
+                </span>
+            </div>
+            <div class="rule"></div>
+            <button type="submit" class="button primary first-in-line" data-disable-with="Creating repository…" tabindex="8" >
+                Create repository
+            </button>
+        </div>
+        }
+    </div>
+</div>
+}

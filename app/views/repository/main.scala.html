@@ -1,0 +1,246 @@
+@(baseUrl: String, repositoryInfo: RepositoryService.RepositoryInfo)(content: Html)
+
+@import helper._
+@views.html.main(""){
+<div class="pagehead repohead instapaper_ignore readability-menu">
+    <div class="container">
+        <ul class="pagehead-actions">
+
+            <li class="subscription">
+                <form accept-charset="UTF-8" action="/notifications/subscribe" class="js-social-container" data-autosubmit="true" data-remote="true" method="post">
+                    <div style="margin:0;padding:0;display:inline">
+                        <input name="authenticity_token" type="hidden" value="UfEMb9T6bjCuOvuwVk3B8psIzfdKWNIxTAXPMQwx6Ic=">
+                    </div>
+                    <input id="repository_id" name="repository_id" type="hidden" value="17022294">
+
+                    <div class="select-menu js-menu-container js-select-menu">
+                        <a class="social-count js-social-count" href="/@repositoryInfo.owner/@repositoryInfo.name/watchers">
+                            1
+                        </a>
+
+                        <span class="minibutton select-menu-button with-count js-menu-target" role="button" tabindex="0">
+                          <span class="js-select-button">
+                            <span class="octicon octicon-eye-unwatch"></span>
+                            Unwatch
+                          </span>
+                        </span>
+
+                        <div class="select-menu-modal-holder">
+                            <div class="select-menu-modal subscription-menu-modal js-menu-content">
+                                <div class="select-menu-header">
+                                    <span class="select-menu-title">Notification status</span>
+                                    <span class="octicon octicon-remove-close js-menu-close"></span>
+                                </div> <!-- /.select-menu-header -->
+
+                                <div class="select-menu-list js-navigation-container" role="menu">
+
+                                    <div class="select-menu-item js-navigation-item " role="menuitem" tabindex="0">
+                                        <span class="select-menu-item-icon octicon octicon-check"></span>
+                                        <div class="select-menu-item-text">
+                                            <input id="do_included" name="do" type="radio" value="included">
+                                            <h4>Not watching</h4>
+                                            <span class="description">You only receive notifications for conversations in which you participate or are mentioned.</span>
+                                            <span class="js-select-button-text hidden-select-button-text">
+                                              <span class="octicon octicon-eye-watch"></span>
+                                              Watch
+                                            </span>
+                                        </div>
+                                    </div> <!-- /.select-menu-item -->
+                                    <div class="select-menu-item js-navigation-item selected" role="menuitem" tabindex="0">
+                                        <span class="select-menu-item-icon octicon octicon octicon-check"></span>
+                                        <div class="select-menu-item-text">
+                                            <input checked="checked" id="do_subscribed" name="do" type="radio" value="subscribed">
+                                            <h4>Watching</h4>
+                                            <span class="description">You receive notifications for all conversations in this repository.</span>
+                                            <span class="js-select-button-text hidden-select-button-text">
+                                              <span class="octicon octicon-eye-unwatch"></span>
+                                              Unwatch
+                                            </span>
+                                        </div>
+                                    </div> <!-- /.select-menu-item -->
+
+                                    <div class="select-menu-item js-navigation-item " role="menuitem" tabindex="0">
+                                        <span class="select-menu-item-icon octicon octicon-check"></span>
+                                        <div class="select-menu-item-text">
+                                            <input id="do_ignore" name="do" type="radio" value="ignore">
+                                            <h4>Ignoring</h4>
+                                            <span class="description">You do not receive any notifications for conversations in this repository.</span>
+                                            <span class="js-select-button-text hidden-select-button-text">
+                                                <span class="octicon octicon-mute"></span>
+                                                Stop ignoring
+                                            </span>
+                                        </div>
+                                    </div> <!-- /.select-menu-item -->
+
+                                </div> <!-- /.select-menu-list -->
+
+                            </div> <!-- /.select-menu-modal -->
+                        </div> <!-- /.select-menu-modal-holder -->
+                    </div> <!-- /.select-menu -->
+
+                </form>
+            </li>
+
+            <li>
+                <div class="js-toggler-container js-social-container starring-container ">
+                    <a href="/sh2enm3/testj/unstar" class="minibutton with-count js-toggler-target star-button starred upwards" title="Unstar this repository" data-remote="true" data-method="post" rel="nofollow">
+                        <span class="octicon octicon-star-delete"></span><span class="text">Unstar</span>
+                    </a>
+                    <a href="/sh2enm3/testj/star" class="minibutton with-count js-toggler-target star-button unstarred upwards" title="Star this repository" data-remote="true" data-method="post" rel="nofollow">
+                        <span class="octicon octicon-star"></span><span class="text">Star</span>
+                    </a>
+                    <a class="social-count js-social-count" href="/sh2enm3/testj/stargazers">
+                        0
+                    </a>
+                </div>
+            </li>
+        </ul>
+
+        <h1 itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb" class="entry-title public">
+            <span class="repo-label"><span>public</span></span>
+            <span class="mega-octicon octicon-repo"></span>
+          <span class="author">
+            <a href="/@repositoryInfo.owner" class="url fn" itemprop="url" rel="author"><span itemprop="title">@repositoryInfo.owner</span></a>
+          </span>
+            <span class="repohead-name-divider">/</span>
+            <strong><a href="/@repositoryInfo.owner/@repositoryInfo.name" class="js-current-repository js-repo-home-link">@repositoryInfo.name</a></strong>
+
+          <span class="page-context-loader">
+            <img alt="Octocat-spinner-32" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
+          </span>
+
+        </h1>
+    </div><!-- /.container -->
+</div>
+<div class="container">
+    <div class="repository-with-sidebar repo-container new-discussion-timeline js-new-discussion-timeline with-full-navigation">
+        <div class="repository-sidebar clearfix">
+            <div class="sunken-menu vertical-right repo-nav js-repo-nav js-repository-container-pjax js-octicon-loaders">
+                <div class="sunken-menu-contents">
+                    <ul class="sunken-menu-group">
+                        <li class="tooltipped leftwards" aria-label="Code" original-title="">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name" aria-label="Code" class="selected js-selected-navigation-item sunken-menu-item" data-gotokey="c" data-pjax="true" data-selected-links="repo_source repo_downloads repo_commits repo_tags repo_branches /sh2enm3/testj">
+                                <span class="octicon octicon-code"></span> <span class="full-word">Code</span>
+                                <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
+                            </a>
+                        </li>
+
+                        <li class="tooltipped leftwards" aria-label="Issues" original-title="">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues" aria-label="Issues" class="js-selected-navigation-item sunken-menu-item js-disable-pjax" data-gotokey="i" data-selected-links="repo_issues /sh2enm3/testj/issues">
+                                <span class="octicon octicon-issue-opened"></span> <span class="full-word">Issues</span>
+                                <span class="counter">0</span>
+                                <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
+                            </a>
+                        </li>
+
+                        <li class="tooltipped leftwards" aria-label="Pull Requests" original-title="">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/pulls" aria-label="Pull Requests" class="js-selected-navigation-item sunken-menu-item js-disable-pjax" data-gotokey="p" data-selected-links="repo_pulls /sh2enm3/testj/pulls">
+                                <span class="octicon octicon-git-pull-request"></span> <span class="full-word">Pull Requests</span>
+                                <span class="counter">0</span>
+                                <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
+                            </a>
+                        </li>
+                        <li class="tooltipped leftwards" aria-label="Wiki" original-title="">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/wiki" aria-label="Wiki" class="js-selected-navigation-item sunken-menu-item" data-pjax="true" data-selected-links="repo_wiki /sh2enm3/testj/wiki">
+                                <span class="octicon octicon-book"></span> <span class="full-word">Wiki</span>
+                                <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="sunken-menu-separator"></div>
+                    <ul class="sunken-menu-group">
+
+                        <li class="tooltipped leftwards" aria-label="Pulse" original-title="">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/pulse" aria-label="Pulse" class="js-selected-navigation-item sunken-menu-item" data-pjax="true" data-selected-links="pulse /sh2enm3/testj/pulse">
+                                <span class="octicon octicon-pulse"></span> <span class="full-word">Pulse</span>
+                                <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
+                            </a>
+                        </li>
+
+                        <li class="tooltipped leftwards" aria-label="Graphs" original-title="">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/graphs" aria-label="Graphs" class="js-selected-navigation-item sunken-menu-item" data-pjax="true" data-selected-links="repo_graphs repo_contributors /sh2enm3/testj/graphs">
+                                <span class="octicon octicon-graph"></span> <span class="full-word">Graphs</span>
+                                <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
+                            </a>
+                        </li>
+
+                        <li class="tooltipped leftwards" aria-label="Network" original-title="">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/network" aria-label="Network" class="js-selected-navigation-item sunken-menu-item js-disable-pjax" data-selected-links="repo_network /sh2enm3/testj/network">
+                                <span class="octicon octicon-git-branch"></span> <span class="full-word">Network</span>
+                                <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="sunken-menu-separator"></div>
+                    <ul class="sunken-menu-group">
+                        <li class="tooltipped leftwards" aria-label="Settings" original-title="">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/settings" class="sunken-menu-item" data-pjax="" aria-label="Settings">
+                                <span class="octicon octicon-tools"></span> <span class="full-word">Settings</span>
+                                <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="only-with-full-nav">
+                <div class="clone-url open" data-protocol-type="http" data-url="/users/set_protocol?protocol_selector=http&amp;protocol_type=push">
+                    <h3><strong>HTTPS</strong> clone URL</h3>
+                    <div class="clone-url-box">
+                        <input type="text" class="clone js-url-field" value="@baseUrl/@repositoryInfo.owner/@(repositoryInfo.name).git" readonly="readonly">
+                        <span aria-label="copy to clipboard" class="js-zeroclipboard url-box-clippy minibutton zeroclipboard-button"
+                              data-clipboard-text="@baseUrl/@repositoryInfo.owner/@(repositoryInfo.name).git" data-copied-hint="copied!">
+                            <span class="octicon octicon-clippy"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="clone-url " data-protocol-type="ssh" data-url="/users/set_protocol?protocol_selector=ssh&amp;protocol_type=push">
+                    <h3><strong>SSH</strong> clone URL</h3>
+                    <div class="clone-url-box">
+                        <input type="text" class="clone js-url-field" value="gitgithub.com:mqshen/nettyStudy.git" readonly="readonly">
+                        <span aria-label="copy to clipboard" class="js-zeroclipboard url-box-clippy minibutton zeroclipboard-button"
+                              data-clipboard-text="gitgithub.com:mqshen/nettyStudy.git" data-copied-hint="copied!">
+                            <span class="octicon octicon-clippy"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="clone-url " data-protocol-type="subversion" data-url="/users/set_protocol?protocol_selector=subversion&amp;protocol_type=push">
+                    <h3><strong>Subversion</strong> checkout URL</h3>
+                    <div class="clone-url-box">
+                        <input type="text" class="clone js-url-field" value="" readonly="readonly">
+                        <span aria-label="copy to clipboard" class="js-zeroclipboard url-box-clippy minibutton zeroclipboard-button"
+                              data-clipboard-text="@baseUrl/@repositoryInfo.owner/@(repositoryInfo.name)" data-copied-hint="copied!">
+                            <span class="octicon octicon-clippy"></span>
+                        </span>
+                    </div>
+                </div>
+
+
+                <p class="clone-options">You can clone with
+                    <a href="#" class="js-clone-selector" data-protocol="http">HTTPS</a>,
+                    <a href="#" class="js-clone-selector" data-protocol="ssh">SSH</a>,
+                    or <a href="#" class="js-clone-selector" data-protocol="subversion">Subversion</a>.
+                    <span class="help tooltipped tooltipped-n" aria-label="Get help on which URL is right for you.">
+                      <a href="https://help.github.com/articles/which-remote-url-should-i-use">
+                          <span class="octicon octicon-question"></span>
+                      </a>
+                    </span>
+                </p>
+
+                <a href="http://mac.github.com" data-url="github-mac://openRepo/https://github.com/mqshen/nettyStudy" class="minibutton sidebar-button js-conduit-rewrite-url">
+                    <span class="octicon octicon-device-desktop"></span>
+                    Clone in Desktop
+                </a>
+
+
+                <a href="/mqshen/nettyStudy/archive/master.zip" class="minibutton sidebar-button" title="Download this repository as a zip file" rel="nofollow">
+                    <span class="octicon octicon-cloud-download"></span>
+                    Download ZIP
+                </a>
+            </div>
+        </div>
+        <div id="js-repo-pjax-container" class="repository-content context-loader-container" data-pjax-container="">
+            @content
+        </div>
+    </div>
+</div>
+}

@@ -1,0 +1,89 @@
+@(user: User, selectIndex: Int, currentUser: Option[User] = None)(content: Html)
+
+@views.html.main(user.userName, "logged_in env-production macintosh page-profile mine tipsy-tooltips", currentUser){
+<div id="site-container" class="context-loader-container" data-pjax-container="">
+    <div class="container">
+        <div class="columns profilecols js-username" data-name="@user.userName">
+            <div class="column-sec vcard" itemscope="" itemtype="http://schema.org/Person">
+              <span class="tooltipped tooltipped-s" aria-label="Change your avatar at gravatar.com" original-title="">
+                <a href="http://gravatar.com/emails/" class="vcard-avatar"><img class="avatar js-avatar" data-user="687580" height="220" src="https://0.gravatar.com/avatar/574f047760ff87f6aefebdfa40eeb07a?d=https%3A%2F%2Fidenticons.github.com%2Ffdeed6355bac156322c8b90d9e90400b.png&amp;r=x&amp;s=440" width="220"></a>
+              </span>
+                <h1 class="vcard-names">
+                    <span class="vcard-fullname" itemprop="name">@user.fullName</span>
+                    <span class="vcard-username" itemprop="additionalName">@user.userName</span>
+                </h1>
+                <ul class="vcard-details">
+                    <!--
+                    <li class="vcard-detail" itemprop="homeLocation">
+                        <span class="octicon octicon-location"></span>beijing china
+                    </li>
+                    -->
+                    <li class="vcard-detail">
+                        <span class="octicon octicon-mail">
+
+                        </span>
+                        <a class="email js-obfuscate-email"
+                           data-email="%67%6f%6c%64%72%61%74%69%6f%38%37%40%67%6d%61%69%6c%2e%63%6f%6d"
+                           href="mailto:@user.mailAddress">@user.mailAddress</a>
+                    </li>
+                    <li class="vcard-detail">
+                        <span class="octicon octicon-clock"></span>
+                        <span class="join-label">Joined on </span>
+                        <span class="join-date">@user.registeredDate</span>
+                    </li>
+                </ul>
+
+
+                <div class="vcard-stats">
+                    <a class="vcard-stat" href="/mqshen/followers">
+                        <strong class="vcard-stat-count">0</strong>
+                        followers
+                    </a>
+                    <a class="vcard-stat" href="/stars">
+                        <strong class="vcard-stat-count">6</strong>
+                        starred
+                    </a>
+                    <a class="vcard-stat" href="/mqshen/following">
+                        <strong class="vcard-stat-count">1</strong>
+                        following
+                    </a>
+                </div>
+
+            </div>
+            <div class="column-main">
+                <div class="tabnav">
+                    <ul class="tabnav-tabs" data-pjax="">
+                        <li data-tab="contributions">
+                            <a href="/@user.userName" class="tabnav-tab @if(selectIndex == 0){ selected }">
+                                <span class="octicon octicon-diff-added"></span>
+                                Contributions
+                            </a>
+                        </li>
+                        <li data-tab="repo">
+                            <a href="/@user.userName?tab=repositories" class="tabnav-tab @if(selectIndex == 1){ selected }">
+                                <span class="octicon octicon-repo"></span>
+                                Repositories
+                            </a>
+                        </li>
+                        <li data-tab="activity">
+                            <a href="/@user.userName?tab=activity" class="tabnav-tab @if(selectIndex == 2){ selected }">
+                                <span class="octicon octicon-rss"></span>
+                                Public Activity
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tabnav-right">
+                        <a href="/account" class="minibutton tabnav-widget">
+                            <span class="octicon octicon-pencil"></span>Edit Your Profile
+                        </a>
+                    </div>
+                </div>
+                <div class="tab-content js-repo-filter">
+                    @content
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

@@ -1,0 +1,181 @@
+@(title: String, bodyClass: String="", user: Option[User] = None)(content: Html)
+
+<!DOCTYPE html>
+<html>
+  <head >
+    <meta charset="utf-8">
+    <title>@title</title>
+    <link rel="icon" href="@routes.Assets.at("images/favicon.png")" type="image/vnd.microsoft.icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Le styles -->
+      <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+      <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/github.css")">
+  </head>
+  <body class="@bodyClass">
+  <div class="wrapper">
+      @user.map { user =>
+      <div class="header header-logged-in true">
+          <div class="container clearfix">
+              <a class="header-logo-invertocat" href="https://github.com/">
+                  <span class="mega-octicon octicon-mark-github"></span>
+              </a>
+              <a href="/notifications" aria-label="You have no unread notifications" class="notification-indicator tooltipped tooltipped-s" data-gotokey="n" original-title="">
+                  <span class="mail-status all-read"></span>
+              </a>
+
+              <div class="command-bar js-command-bar  in-repository">
+                  <form accept-charset="UTF-8" action="/search" class="command-bar-form" id="top_search_form" method="get">
+
+                      <input type="text" data-hotkey="/ s" name="q" id="js-command-bar-field" placeholder="Search or type a command" tabindex="1" autocapitalize="off" data-username="mqshen" data-repo="twbs/bootstrap" data-branch="master" data-sha="30e3502627f799645228d6ccb054b1047df65a0b">
+
+                      <input type="hidden" name="nwo" value="twbs/bootstrap">
+
+                      <div class="select-menu js-menu-container js-select-menu search-context-select-menu">
+                        <span class="minibutton select-menu-button js-menu-target" role="button" aria-haspopup="true">
+                          <span class="js-select-button">This repository</span>
+                        </span>
+
+                          <div class="select-menu-modal-holder js-menu-content js-navigation-container" aria-hidden="true">
+                              <div class="select-menu-modal">
+
+                                  <div class="select-menu-item js-navigation-item js-this-repository-navigation-item selected">
+                                      <span class="select-menu-item-icon octicon octicon-check"></span>
+                                      <input type="radio" class="js-search-this-repository" name="search_target" value="repository" checked="checked">
+                                      <div class="select-menu-item-text js-select-button-text">This repository</div>
+                                  </div> <!-- /.select-menu-item -->
+
+                                  <div class="select-menu-item js-navigation-item js-all-repositories-navigation-item">
+                                      <span class="select-menu-item-icon octicon octicon-check"></span>
+                                      <input type="radio" name="search_target" value="global">
+                                      <div class="select-menu-item-text js-select-button-text">All repositories</div>
+                                  </div> <!-- /.select-menu-item -->
+
+                              </div>
+                          </div>
+                      </div>
+
+                        <span class="help tooltipped tooltipped-s" aria-label="Show command bar help" original-title="">
+                          <span class="octicon octicon-question"></span>
+                        </span>
+
+                      <input type="hidden" name="type" value="Issues">
+
+                      <input type="hidden" name="ref" value="cmdform">
+
+                  </form>
+                  <ul class="top-nav">
+                      <li class="explore"><a href="/explore">Explore</a></li>
+                      <li><a href="https://gist.github.com">Gist</a></li>
+                      <li><a href="/blog">Blog</a></li>
+                      <li><a href="https://help.github.com">Help</a></li>
+                  </ul>
+              </div>
+              <ul id="user-links">
+                  <li>
+                      <a href="/@user.userName" class="name">
+                          <img alt="@user.fullName" class=" js-avatar" data-user="687580" height="20" src="https://2.gravatar.com/avatar/574f047760ff87f6aefebdfa40eeb07a?d=https%3A%2F%2Fidenticons.github.com%2Ffdeed6355bac156322c8b90d9e90400b.png&amp;r=x&amp;s=140" width="20"> @user.userName
+                      </a>
+                  </li>
+
+                  <li class="new-menu dropdown-toggle js-menu-container">
+                      <a href="#" class="js-menu-target tooltipped tooltipped-s" aria-label="Create new..." original-title="">
+                          <span class="octicon octicon-plus"></span>
+                          <span class="dropdown-arrow"></span>
+                      </a>
+
+                      <div class="new-menu-content js-menu-content">
+                      </div>
+                  </li>
+
+                  <li>
+                      <a href="/settings/profile" id="account_settings" class="tooltipped tooltipped-s" aria-label="Account settings " original-title="">
+                          <span class="octicon octicon-tools"></span>
+                      </a>
+                  </li>
+                  <li>
+                      <a class="tooltipped tooltipped-s" href="/logout" data-method="post" id="logout" aria-label="Sign out" original-title="">
+                          <span class="octicon octicon-log-out"></span>
+                      </a>
+                  </li>
+              </ul>
+              <div class="js-new-dropdown-contents hidden">
+                  <ul class="dropdown-menu">
+                      <li>
+                          <a href="/new"><span class="octicon octicon-repo-create"></span> New repository</a>
+                      </li>
+                      <li>
+                          <a href="/organizations/new"><span class="octicon octicon-organization"></span> New organization</a>
+                      </li>
+                      <li class="section-title">
+                          <span title="twbs/bootstrap">This repository</span>
+                      </li>
+                      <li>
+                          <a href="/twbs/bootstrap/issues/new"><span class="octicon octicon-issue-opened"></span> New issue</a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+      }.getOrElse {
+        <div class="header header-logged-out">
+            <div class="container clearfix">
+
+                <a class="header-logo-wordmark" href="https://github.com/">
+                    <span class="mega-octicon octicon-logo-github"></span>
+                </a>
+
+                <div class="header-actions">
+                    <a class="button primary" href="/join">Sign up</a>
+                    <a class="button signin" href="/login">Sign in</a>
+                </div>
+
+                <div class="command-bar js-command-bar  ">
+
+                    <ul class="top-nav">
+                        <li class="explore"><a href="/explore">Explore</a></li>
+                        <li class="features"><a href="/features">Features</a></li>
+                        <li class="enterprise"><a href="https://enterprise.github.com/">Enterprise</a></li>
+                        <li class="blog"><a href="/blog">Blog</a></li>
+                    </ul>
+                    <form accept-charset="UTF-8" action="/search" class="command-bar-form" id="top_search_form" method="get">
+
+                        <input type="text" data-hotkey="/ s" name="q" id="js-command-bar-field" placeholder="Search or type a command" tabindex="1" autocapitalize="off">
+                          <span class="octicon help tooltipped downwards" aria-label="Show command bar help" original-title="">
+                            <span class="octicon octicon-question"></span>
+                          </span>
+                        <input type="hidden" name="ref" value="cmdform">
+                    </form>
+                </div>
+
+            </div>
+        </div>
+      }
+      <div class="site clearfix">
+            @content
+      </div>
+  </div>
+  <div class="site-footer">
+      <ul class="site-footer-links right">
+          <li><a href="https://status.github.com/">Status</a></li>
+          <li><a href="http://developer.github.com">API</a></li>
+          <li><a href="http://training.github.com">Training</a></li>
+          <li><a href="http://shop.github.com">Shop</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/about">About</a></li>
+
+      </ul>
+
+      <a href="/">
+          <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+      </a>
+
+      <ul class="site-footer-links">
+          <li>© 2014 <span title="0.03964s from github-fe137-cp1-prd.iad.github.net">GitHub</span>, Inc.</li>
+          <li><a href="/site/terms">Terms</a></li>
+          <li><a href="/site/privacy">Privacy</a></li>
+          <li><a href="/security">Security</a></li>
+          <li><a href="/contact">Contact</a></li>
+      </ul>
+  </div>
+</body>
+</html>

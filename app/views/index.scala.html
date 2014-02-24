@@ -1,0 +1,36 @@
+@(title: String)
+@import helper._
+@views.html.main(""){
+    <div id="site-container" class="context-loader-container" data-pjax-container="">
+        <div class="marketing-section marketing-section-signup">
+            <div class="container">
+                <form action="/signup" method="post" class="form-signup-home js-form-signup-home">
+                    <dl class="form">
+                        <dd>
+                            <input type="text" name="name" class="textfield" placeholder="Pick a username" data-autocheck-url="/signup_check/username" autofocus="">
+                        </dd>
+                    </dl>
+                    <dl class="form">
+                        <dd>
+                            <input type="text" name="email" class="textfield" placeholder="Your email" data-autocheck-url="/signup_check/email">
+                        </dd>
+                    </dl>
+                    <dl class="form">
+                        <dd>
+                            <input type="password" name="password" class="textfield" placeholder="Create a password" data-autocheck-url="/signup_check/password">
+                        </dd>
+                        <p class="text-muted">Use at least one lowercase letter, one numeral, and seven characters.</p>
+                    </dl>
+                    <input type="hidden" name="source_label" value="Homepage Form">
+                    <button class="button primary button-block" type="submit">Sign up for GitHub</button>
+                </form>
+                <h1 class="heading">Build software better, together.</h1>
+                <p class="subheading">Powerful collaboration, code review, and code management for open source and private projects. Need private repositories?
+                    <a href="/plans">Upgraded plans start at $7/mo.</a>
+                </p>
+            </div>
+            <!-- /.container -->
+            <div class="marketing-section-depth"></div>
+        </div>
+    </div>
+}

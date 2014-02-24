@@ -1,0 +1,35 @@
+@(user: User, currentUser: Option[User])
+
+@main(user, 0, currentUser){
+<div class="tab-content js-repo-filter">
+    <div class="contributions-tab">
+        <!-- POPULAR REPOSITORIES -->
+        <div class="grid popular-repos">
+            <div class="col">
+                <div class="box box-small">
+                    <div class="box-header">
+                        <h3 class="box-title">Popular repositories</h3>
+                    </div>
+                    <div class="box-body">
+                        <ul class="repo-list">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="box box-small">
+                    <div class="box-header">
+                        <h3 class="box-title">Repositories contributed to</h3>
+                    </div>
+                    <div class="box-body">
+                        <ul class="repo-list">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+}
