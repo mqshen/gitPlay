@@ -7,6 +7,10 @@ drop table `COMMIT_LOG`
 
 drop table `ACTIVITY`
 
+drop table `LABEL`
+
 drop table `REPOSITORY`
+
+drop table `ISSUE_COMMENT`
 
 drop table `ISSUE`

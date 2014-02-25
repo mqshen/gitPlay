@@ -1,0 +1,320 @@
+@(baseUrl: String, currentUrl: String, repositoryInfo: RepositoryService.RepositoryInfo, issue: Issue, comments: List[IssueComment], selectIndex: Int, user: Option[User] = None, labels: String = "")
+@import helper._
+@views.html.helper.main(baseUrl, repositoryInfo, user, false, 1){
+<div id="issues_next">
+    <div id="show_issue" class="js-issues-results">
+        <div id="js-discussion-header" class="gh-header js-details-container js-socket-channel js-updatable-content js-issue-header issue"
+             data-channel="@repositoryInfo.owner/@repositoryInfo.name:issue:27571573"
+             data-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=title">
+            <div class="gh-header-show">
+                <div class="gh-header-actions">
+                    <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues/new" class="minibutton primary js-new-issue-button" data-hotkey="c">
+                        New issue
+                    </a>
+                </div>
+
+                <a class="gh-header-back js-history-back" href="https://github.com/@repositoryInfo.owner/@repositoryInfo.name/issues?state=open" data-hotkey="u" title="Back to Issue list">
+                    <span class="mega-octicon octicon-chevron-left"></span>
+                </a>
+
+                <h1 class="gh-header-title">
+                    <span class="js-issue-title">@issue.title</span>
+                    <span class="gh-header-number">#@issue.issueId</span>
+                </h1>
+            </div>
+
+
+            <div class="gh-header-meta">
+                @if(issue.closed) {
+                <div class="gh-header-status closed">
+                    <span class="octicon octicon-issue-closed"></span>
+                    Closed
+                </div>
+                } else {
+                <div class="gh-header-status open">
+                    <span class="octicon octicon-issue-opened"></span>
+                    Open
+                </div>
+                }
+                <a href="/@issue.openedUserName" class="author">@issue.openedUserName</a> opened this
+                <span class="noun">Issue</span>
+                <time class="js-relative-date" data-title-format="YYYY-MM-DD HH:mm:ss" datetime="@issue.registeredDate" title="2014-02-14 11:25:10">11 days ago</time>
+                · 0 comments
+            </div>
+        </div>
+        <div id="discussion_bucket" class="tab-content">
+            <div class="discussion-sidebar">
+                <div id="js-discussion-stats" class="discussion-stats js-socket-channel js-updatable-content" data-channel="@repositoryInfo.owner/@repositoryInfo.name:issue:27571573" data-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=discussion_stats">
+                </div>
+                <div class="discussion-sidebar-item sidebar-labels">
+                    <h3 class="discussion-sidebar-heading">
+                        Labels
+                    </h3>
+                    <div class="labels css-truncate js-timeline-label-list"></div>
+                </div>
+                <div class="discussion-sidebar-item sidebar-milestone">
+                    <div class="select-menu js-menu-container js-select-menu js-milestone-picker is-showing-clear-item is-loading" data-contents-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=milestone_select_menu">
+
+                        <h3 class="discussion-sidebar-heading">
+                            Milestone
+                        </h3>
+                    </div> <!-- /.select-menu -->
+                    <span class="js-milestone-infobar-item-wrapper">
+                        <span class="text-muted">No milestone</span>
+                    </span>
+                </div>
+                <div class="discussion-sidebar-item sidebar-assignee">
+                    <div class="select-menu js-menu-container js-select-menu js-assignee-picker js-assignee-picker-next  is-loading" data-contents-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=assignee_select_menu">
+
+                        <h3 class="discussion-sidebar-heading">
+                            Assignee
+                        </h3>
+
+                    </div> <!-- /.select-menu -->
+
+                    <p class="css-truncate js-assignee-infobar-item-wrapper">
+                        <span class="text-muted">No one assigned</span>
+                    </p>
+                </div>
+
+
+                <div class="discussion-sidebar-item sidebar-notifications">
+                    <h3 class="discussion-sidebar-heading">Notifications</h3>
+                    <div class="thread-subscription-status js-thread-subscription-status js-socket-channel js-updatable-content"
+                         data-channel="@repositoryInfo.owner/@repositoryInfo.name:thread-subscription:27571573:mqshen"
+                         data-url="/notifications/thread_subscription?repository_id=1062237&amp;thread_class=Issue&amp;thread_id=27571573">
+
+                        <span class="mega-octicon octicon-radio-tower"></span>
+
+                        <span class="tooltipped tooltipped-w thread-subscription-help hidden" aria-label="You only receive notifications for this thread when you participate or are @@mentioned." original-title=""><span class="octicon octicon-question"></span></span>
+
+                        <form accept-charset="UTF-8" action="/notifications/thread" class="thread-subscribe-form" data-remote="true" method="post">
+                            <div style="margin:0;padding:0;display:inline">
+                                <input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk=">
+                            </div>
+                            <input type="hidden" name="repository_id" value="1062237">
+                            <input type="hidden" name="thread_id" value="27571573">
+                            <input type="hidden" name="thread_class" value="Issue">
+                            <input type="hidden" name="id" value="subscribe">
+
+                            <button class="minibutton" type="submit" data-disable-with="">
+                                <span class="octicon octicon-eye-watch"></span>
+                                Subscribe
+                            </button>
+                        </form>
+                        <p class="reason">You only receive notifications for this thread when you participate or are @@mentioned.</p>
+                    </div>
+
+
+                </div>
+
+                <div class="discussion-sidebar-item">
+
+                    <div id="js-users-participants" class="js-socket-channel js-updatable-content" data-channel="@repositoryInfo.owner/@repositoryInfo.name:issue:27571573" data-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=participants">
+                        <div class="pull-participation">
+
+                            <h3 class="discussion-sidebar-heading">
+                                1 participant
+                            </h3>
+                            <div class="pull-participation-avatars">
+                                <a class="avatar tooltipped tooltipped-s" aria-label="felipellrocha" href="/felipellrocha" original-title=""><img alt="Felipe Rocha" class=" js-avatar" data-user="366457" height="20" src="https://0.gravatar.com/avatar/6a9b11c53cb80e788dfb35fc87813921?d=https%3A%2F%2Fidenticons.github.com%2F041c00b582746b9deb32b59ac9ac3211.png&amp;r=x&amp;s=140" width="20"></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="pr_contributors_box" style="display:none">
+                        <h2 class="facebox-header">People participating in this issue</h2>
+                        <ul class="facebox-user-list">
+                            <li class="facebox-user-list-item">
+                                <img alt="Felipe Rocha" class=" js-avatar" data-user="366457" height="24"
+                                     src="" width="24">
+                                <a href="/felipellrocha">felipellrocha</a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="discussion-timeline js-quote-selection-container">
+                <div class="js-discussion">
+                    <div class="timeline-comment-wrapper js-comment-container">
+                        <a href="/@issue.openedUserName">
+                            <img alt="Felipe Rocha" class="timeline-comment-avatar js-avatar" data-user="366457" height="48"
+                                 src="" width="48">
+                        </a>
+
+                        <div class="timeline-comment timeline-comment-">
+                            <div id="issue-@issue.issueId" class="comment js-comment js-task-list-container" data-body-version="250e71b36e2613c5a7cc01873d8e99fe">
+                                <div class="timeline-comment-header ">
+                                    <div class="timeline-comment-header-text">
+                                        <strong>
+                                            <a href="/@issue.openedUserName" class="author">@issue.openedUserName</a>
+                                        </strong>
+                                        commented
+                                        <a href="#issue-27571573" class="timestamp">
+                                            <time class="js-relative-date" data-title-format="YYYY-MM-DD HH:mm:ss" datetime="2014-02-13T19:25:10-08:00" title="2014-02-14 11:25:10">11 days ago</time>
+                                        </a>
+
+                                    </div>
+                                </div>
+
+                                <div class="comment-content">
+
+                                    <div class="edit-comment-hide">
+                                        <div class="comment-body markdown-body markdown-format js-comment-body">
+                                            @issue.content
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    @comments.map {comment =>
+                    <div class="timeline-comment-wrapper js-comment-container">
+                        <a href="/@comment.commentedUserName">
+                            <img alt="Felipe Rocha" class="timeline-comment-avatar js-avatar" data-user="366457" height="48"
+                                 src="" width="48">
+                        </a>
+
+                        <div class="timeline-comment timeline-comment-">
+                            <div id="issuecomment-@comment.commentId" class="comment js-comment js-task-list-container" data-body-version="250e71b36e2613c5a7cc01873d8e99fe">
+                                <div class="timeline-comment-header ">
+                                    <div class="timeline-comment-header-text">
+                                        <strong>
+                                            <a href="/@issue.openedUserName" class="author">@comment.commentedUserName</a>
+                                        </strong>
+                                        commented
+                                        <a href="#issue-27571573" class="timestamp">
+                                            <time class="js-relative-date" data-title-format="YYYY-MM-DD HH:mm:ss" datetime="2014-02-13T19:25:10-08:00" title="2014-02-14 11:25:10">11 days ago</time>
+                                        </a>
+
+                                    </div>
+                                </div>
+
+                                <div class="comment-content">
+
+                                    <div class="edit-comment-hide">
+                                        <div class="comment-body markdown-body markdown-format js-comment-body">
+                                            @comment.content
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    }
+                </div>
+
+                <div class="discussion-timeline-actions">
+
+
+                    <div class="timeline-comment-wrapper timeline-new-comment js-comment-container">
+                        <a href="/mqshen"><img alt="miaoqi shen" class="timeline-comment-avatar js-avatar" data-user="687580" height="48" src="https://0.gravatar.com/avatar/574f047760ff87f6aefebdfa40eeb07a?d=https%3A%2F%2Fidenticons.github.com%2Ffdeed6355bac156322c8b90d9e90400b.png&amp;r=x&amp;s=140" width="48"></a>
+
+                        <form accept-charset="UTF-8" action="/@repositoryInfo.owner/@repositoryInfo.name/issue_comments" class="js-new-comment-form" data-remote="true" data-type="json" method="post"><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk="></div>
+                            <div class="timeline-comment">
+                                <input type="hidden" name="issueId" value="@issue.issueId">
+
+
+                                <div class="js-previewable-comment-form previewable-comment-form write-selected" data-preview-url="/preview?repository=1062237">
+                                    <div class="comment-form-head tabnav">
+                                        <ul class="tabnav-tabs">
+                                            <li><a href="#write_bucket_797" class="tabnav-tab write-tab js-write-tab selected">Write</a></li>
+                                            <li><a href="#preview_bucket_797" class="tabnav-tab preview-tab js-preview-tab">Preview</a></li>
+                                        </ul>
+                                        <span class="tabnav-right">
+                                          <span class="tabnav-widget text">Comments are parsed with <a href="https://help.github.com/articles/github-flavored-markdown" class="gfm-help" target="_blank">GitHub Flavored Markdown</a></span>
+                                        </span>
+                                    </div>
+
+                                    <div class="comment-form-error js-comment-form-error" style="display:none">    There was an error creating your Issue:
+                                    </div>
+                                    <div id="write_bucket_797" class="write-content js-write-bucket js-uploadable-container upload-enabled is-default" data-model="assets">
+
+                                        <a href="#fullscreen_comment_body_797" class="enable-fullscreen js-enable-fullscreen tooltipped tooltipped-w " aria-label="Zen Mode" original-title="">
+                                            <span class="octicon octicon-screen-full"></span>
+                                        </a>
+
+                                        <textarea name="content" tabindex="1" id="comment_body_797" placeholder="Leave a comment" class="comment-form-textarea js-comment-field js-size-to-fit js-quote-selection-target input-with-fullscreen-icon" data-suggester="797_new_preview_suggester"></textarea>
+
+
+                                        <p class="drag-and-drop">
+                                            <span class="default">
+                                                Attach images by dragging &amp; dropping,
+                                                <input type="file" multiple="multiple" class="manual-file-chooser js-manual-file-chooser">
+                                                <a class="manual-file-chooser-text" href="#">selecting them</a>, or pasting
+                                                from the clipboard.
+                                            </span>
+                                            <span class="loading">
+                                              <img alt="Octocat-spinner-32" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16"> Uploading your images…
+                                            </span>
+                                            <span class="error bad-file">
+                                              Unfortunately we don't support that file type yet. Please use PNG, GIF, or JPG.
+                                            </span>
+                                            <span class="error too-big">
+                                              Yowza, that's a big file. Please submit an image file smaller than 5MB.
+                                            </span>
+                                            <span class="error bad-browser">
+                                              This browser doesn't support image attachments.
+                                            </span>
+                                            <span class="error failed-request">
+                                              Something went really wrong and we can't process that image.
+                                            </span>
+                                        </p>
+
+                                    </div>
+                                    <div id="preview_bucket_797" class="preview-content js-preview-bucket">
+
+
+                                        <div id="openstruct-70316592012860" class="comment js-comment js-task-list-container" data-body-version="">
+
+                                            <div class="comment-content">
+
+                                                <div class="edit-comment-hide">
+                                                    <div class="comment-body markdown-body  js-comment-body">
+                                                        <p>Nothing to preview</p>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+
+                                    <div class="suggester-container">
+                                        <div class="suggester js-navigation-container" id="797_new_preview_suggester" data-url="/@repositoryInfo.owner/@repositoryInfo.name/suggestions/issue/27571573">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+
+                                    <div id="js-new-comment-form-actions" class="js-socket-channel js-updatable-content" data-channel="@repositoryInfo.owner/@repositoryInfo.name:issue:27571573:state" data-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=form_actions">
+
+
+
+
+
+                                        <button type="submit" class="button primary" tabindex="2" data-disable-with="">
+                                            Comment
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

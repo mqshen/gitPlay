@@ -9,13 +9,14 @@ import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.Play.current
-import models.{RepositoryDAO, Repository, IssueDAO, Issue}
+import models._
 import services.RepositoryService
 import java.sql.Date
 import util.Directory._
 import scala.Some
-import models.Issue
 import util.JGitUtil
+import scala.Some
+import models.Issue
 
 object IssuesController extends Controller with RepositoryService with Secured {
 
@@ -23,8 +24,8 @@ object IssuesController extends Controller with RepositoryService with Secured {
     DB.withSession{ implicit session =>
       getRepository(userName, repositoryName).map { repositoryInfo =>
         val issues = IssueDAO.getIssue(userName, repositoryName)
-      request.uri
-        Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, 0, getSessionUser(request)))
+        val labels = LabelDAO.getLabels(userName, repositoryName)
+        Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request)))
       }.getOrElse(NotFound)
     }
   }
@@ -41,36 +42,40 @@ object IssuesController extends Controller with RepositoryService with Secured {
             (Map(), 3)
         }
         val issues = IssueDAO.getIssue(userName, repositoryName, conditions)
-        Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, selectIndex, getSessionUser(request)))
+        val labels = LabelDAO.getLabels(userName, repositoryName)
+        Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, selectIndex, getSessionUser(request)))
       }.getOrElse(NotFound)
     }
   }
 
-  val createForm: Form[Issue] = Form(
+  case class IssueForm(title: String, body: Option[String], milestoneId: Option[Int], assignedUserName: Option[String], labels: List[Int])
+
+  val createForm: Form[IssueForm] = Form(
 
     mapping(
       "title" -> text(minLength = 4),
       "body" -> optional(text(minLength = 6)),
       "milestoneId" -> optional(number),
-      "assignedUserName" -> optional(text(minLength = 3))
+      "assignedUserName" -> optional(text(minLength = 3)),
+      "labels" -> list(number)
     )
     {
       // Binding: Create a User from the mapping result (ignore the second password and the accept field)
-      (title, body, milestoneId, assignedUserName) => {
-        val currentDate = new Date(System.currentTimeMillis())
-        Issue("", "", None, "", milestoneId, assignedUserName, title, body, false, currentDate, currentDate, false)
+      (title, body, milestoneId, assignedUserName, labels) => {
+        IssueForm(title, body, milestoneId, assignedUserName, labels)
       }
     }
     {
       // Unbinding: Create the mapping values from an existing User value
-      issue => Some(issue.title, issue.content, issue.milestoneId, issue.assignedUserName)
+      issue => Some(issue.title, issue.body, issue.milestoneId, issue.assignedUserName, issue.labels)
     }
   )
 
   def create(userName: String, repositoryName: String) = Action { implicit request =>
     DB.withSession{ implicit session =>
       getRepository(userName, repositoryName).map { repositoryInfo =>
-        Ok(views.html.issue.create(getBaseUrl(request), repositoryInfo, getSessionUser(request)))
+        val labels = LabelDAO.getLabels(userName, repositoryName)
+        Ok(views.html.issue.create(getBaseUrl(request), repositoryInfo, labels, getSessionUser(request)))
       }.getOrElse(NotFound)
     }
   }
@@ -80,19 +85,37 @@ object IssuesController extends Controller with RepositoryService with Secured {
       DB.withSession{ implicit session =>
         getRepository(userName, repositoryName).map { repositoryInfo =>
           createForm.bindFromRequest.fold(
-            errors =>
-              BadRequest(views.html.issue.create(getBaseUrl(request), repositoryInfo, getSessionUser(request))),
+            errors => {
+              val labels = LabelDAO.getLabels(userName, repositoryName)
+              BadRequest(views.html.issue.create(getBaseUrl(request), repositoryInfo, labels, getSessionUser(request)))
+            },
             issue => {
-              issue.userName = userName
-              issue.repositoryName = repositoryName
-              issue.openedUserName = user.userName
-              IssueDAO.create(issue)
+              val currentDate = new Date(System.currentTimeMillis())
+              val newIssue = new Issue(userName, repositoryName, None, user.userName, issue.milestoneId,
+                issue.assignedUserName, issue.title, issue.body, false, currentDate, currentDate, false
+              )
+              val issueId = IssueDAO.create(newIssue)
+              issue.labels.foreach { labelId =>
+                val issueLabel = new IssueLabel(userName, repositoryName, issueId, labelId)
+                IssueLabelDAO.create(issueLabel)
+              }
               Redirect("/")
             }
           )
         }.getOrElse(NotFound)
       }
     }.getOrElse(NotFound)
+  }
+
+  def detail(userName: String, repositoryName: String, issueId: Int) = Action { implicit request =>
+    DB.withSession{ implicit session =>
+      getRepository(userName, repositoryName).map { repositoryInfo =>
+        IssueDAO.getById(issueId).map { issue =>
+          val comments = IssueCommentDAO.get(userName, repositoryName, issue.issueId)
+          Ok(views.html.issue.detail(getBaseUrl(request), request.uri, repositoryInfo, issue, comments, 0, getSessionUser(request)))
+        }.getOrElse(NotFound)
+      }.getOrElse(NotFound)
+    }
   }
   /*
       getRepository(userName, repositoryName).map { repositoryInfo =>

@@ -18,7 +18,7 @@ protected[models] trait BasicTemplate { self: Table[_] =>
 }
 
 protected[models] trait IssueTemplate extends BasicTemplate { self: Table[_] =>
-  def issueId = column[Option[Int]]("ISSUE_ID", O.PrimaryKey, O.AutoInc)
+  def issueId = column[Option[Int]]("ISSUE_ID")
 
   def byIssue(owner: String, repository: String, issueId: Int) =
     byRepository(owner, repository) && (this.issueId is issueId.bind)
@@ -28,7 +28,7 @@ protected[models] trait IssueTemplate extends BasicTemplate { self: Table[_] =>
 }
 
 protected[models] trait LabelTemplate extends BasicTemplate { self: Table[_] =>
-  def labelId = column[Int]("LABEL_ID")
+  def labelId = column[Option[Int]]("LABEL_ID", O.PrimaryKey, O.AutoInc)
 
   def byLabel(owner: String, repository: String, labelId: Int) =
     byRepository(owner, repository) && (this.labelId is labelId.bind)

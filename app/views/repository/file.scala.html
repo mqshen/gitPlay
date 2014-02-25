@@ -1,6 +1,6 @@
 @(baseUrl: String, path: String, reversion: String, repositoryInfo: RepositoryService.RepositoryInfo, contentInfo: JGitUtil.ContentInfo, commitInfo: JGitUtil.CommitInfo, user: Option[User] = None)
 @import helper._
-@views.html.helper.main(baseUrl, repositoryInfo, user){
+@views.html.helper.main(baseUrl, repositoryInfo, user, false){
 <div class="file-navigation">
     <div class="select-menu js-menu-container js-select-menu">
         <span class="minibutton select-menu-button js-menu-target" data-hotkey="w" data-master-branch="master" data-ref="master" role="button" aria-label="Switch branches or tags" tabindex="0" aria-haspopup="true">

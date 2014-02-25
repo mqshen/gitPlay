@@ -1,6 +1,6 @@
-@(baseUrl: String, currentUrl: String, repositoryInfo: RepositoryService.RepositoryInfo, issues: List[Issue], selectIndex: Int, user: Option[User] = None, labels: String = "")
+@(baseUrl: String, currentUrl: String, repositoryInfo: RepositoryService.RepositoryInfo, issues: List[Issue], labels: List[Label], selectIndex: Int, user: Option[User] = None, currentLabels: String = "")
 @import helper._
-@views.html.helper.main(baseUrl, repositoryInfo, user){
+@views.html.helper.main(baseUrl, repositoryInfo, user, true, 1){
 <div class="tabnav tabnav-issues">
     <div class="tabnav-right">
         <div class="tabnav-widget ">
@@ -84,70 +84,38 @@
         <div class="js-editable-labels-container">
             <ul class="js-color-label-list filter-list color-label-list small js-editable-labels-show" data-pjax="">
                 <h4>Labels</h4>
+                @labels.map { label =>
                 <li>
-                    <a href="@(currentUrl)&amp;labels=bug&amp;page=1&amp;state=open" class="filter-item color-label  labelstyle-fc2929 zeroed" data-label="bug" rel="nofollow">
+                    <a href="@(currentUrl)&amp;labels=bug&amp;page=1&amp;state=open"
+                       class="filter-item color-label  labelstyle-@label.color zeroed" data-label="bug" rel="nofollow">
                         <span class="count">0</span>
-                        <span class="color" style="background-color: #fc2929">&nbsp;</span>
+                        <span class="color" style="background-color: #@label.color">&nbsp;</span>
                         <span class="octicon octicon-remove-close"></span>
-                        <span class="name">bug</span>
+                        <span class="name">@label.labelName</span>
                     </a>
                 </li>
-                <li>
-                    <a href="@(currentUrl)&amp;labels=duplicate&amp;page=1&amp;state=open" class="filter-item color-label  labelstyle-cccccc zeroed" data-label="duplicate" rel="nofollow">
-                        <span class="count">0</span>
-                        <span class="color" style="background-color: #cccccc">&nbsp;</span>
-                        <span class="octicon octicon-remove-close"></span>
-                        <span class="name">duplicate</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="@(currentUrl)&amp;labels=enhancement&amp;page=1&amp;state=open" class="filter-item color-label  labelstyle-84b6eb zeroed" data-label="enhancement" rel="nofollow">
-                        <span class="count">0</span>
-                        <span class="color" style="background-color: #84b6eb">&nbsp;</span>
-                        <span class="octicon octicon-remove-close"></span>
-                        <span class="name">enhancement</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="@(currentUrl)&amp;labels=invalid&amp;page=1&amp;state=open" class="filter-item color-label  labelstyle-e6e6e6 zeroed" data-label="invalid" rel="nofollow">
-                        <span class="count">0</span>
-                        <span class="color" style="background-color: #e6e6e6">&nbsp;</span>
-                        <span class="octicon octicon-remove-close"></span>
-                        <span class="name">invalid</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="@(currentUrl)&amp;labels=question&amp;page=1&amp;state=open" class="filter-item color-label  labelstyle-cc317c zeroed" data-label="question" rel="nofollow">
-                        <span class="count">0</span>
-                        <span class="color" style="background-color: #cc317c">&nbsp;</span>
-                        <span class="octicon octicon-remove-close"></span>
-                        <span class="name">question</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="@(currentUrl)&amp;labels=wontfix&amp;page=1&amp;state=open" class="filter-item color-label  labelstyle-ffffff zeroed" data-label="wontfix" rel="nofollow">
-                        <span class="count">0</span>
-                        <span class="color" style="background-color: #ffffff">&nbsp;</span>
-                        <span class="octicon octicon-remove-close"></span>
-                        <span class="name">wontfix</span>
-                    </a>
-                </li>
+                }
             </ul>
 
             <div class="js-editable-labels-edit hidden">
                 <h4>Edit Labels</h4>
                 <ul class="js-color-label-list filter-list color-label-list small editable">
-                    <li class="color-label zeroed labelstyle-fc2929 js-menu-container js-editable-label">
+                    @labels.map { label =>
+                    <li class="color-label zeroed labelstyle-@label.color js-menu-container js-editable-label" data-toggle="editor">
                         <div class="filter-item js-menu-target">
-                            <span class="color" style="background-color: #fc2929"><a href="#">&nbsp;</a></span>
-                            <span class="delete"><a href="/@repositoryInfo.owner/@repositoryInfo.name/issues/labels/78815329" class="js-color-label-delete" data-remote="" data-method="delete"><span class="octicon octicon-remove-close"></span></a></span>
-                            <span class="name "><a href="#rename">bug</a></span>
+                            <span class="color" style="background-color: #@label.color "><a href="#">&nbsp;</a></span>
+                            <span class="delete">
+                                <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues/labels/@label.labelName" class="js-color-label-delete btn" data-toggle="remote" data-method="delete">
+                                    <span class="octicon octicon-remove-close"></span>
+                                </a>
+                            </span>
+                            <span class="name">@label.labelName</span>
                         </div>
 
                         <div class="edit-color-label-form js-menu-content js-label-editor">
-                            <form accept-charset="UTF-8" action="/@repositoryInfo.owner/@repositoryInfo.name/issues/labels/bug" class="edit_label" id="edit_label_78815329" method="post"><div style="margin:0;padding:0;display:inline"><input name="_method" type="hidden" value="put"><input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk="></div>
+                            <form accept-charset="UTF-8" action="/@repositoryInfo.owner/@repositoryInfo.name/issues/labels/@label.labelName" class="edit_label" id="edit_label_78815329" method="post"><div style="margin:0;padding:0;display:inline"><input name="_method" type="hidden" value="put"><input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk="></div>
                                 <div class="fieldWithErrors">
-                                    <input class="name-input" id="label_name" name="label[name]" size="30" type="text" value="bug">
+                                    <input class="name-input" id="label_name" name="name" size="30" type="text" value="@label.labelName">
                                 </div>
                                 <ul class="color-chooser js-color-chooser">
                                     <li>
@@ -225,7 +193,7 @@
                                         <div class="color-editor-bg js-color-editor-bg"></div>
 
                                         <div class="fieldWithErrors">
-                                            <input class="color-editor-input js-color-editor-input hexfield" data-original-color="#fc2929" id="/label_color" maxlength="7" name="label[color]" size="7" type="text" value="#fc2929">
+                                            <input class="color-editor-input js-color-editor-input hexfield" style="color: #@label.color;  border-color: #@label.color" data-original-color="#@label.color" id="/label_color" maxlength="7" name="color" size="7" type="text" value="#@label.color">
                                         </div>
 
                                         <button type="submit" class="js-label-editor-submit minibutton">Save</button>
@@ -234,22 +202,23 @@
                             </form>
                         </div>
                     </li>
+                    }
                 </ul>
             </div>
 
             <div class="rule"></div>
 
-            <a href="#" class="minibutton js-manage-labels manage-labels-toggle" id="manage-labels">Manage Labels</a>
+            <a href="#" class="btn minibutton js-manage-labels manage-labels-toggle" data-toggle="button" id="manage-labels">Manage Labels</a>
 
-            <div class="edit-color-label-form new-label-form js-new-label-form js-label-editor">
+            <div class="edit-color-label-form new-label-form js-new-label-form js-label-editor" data-toggle="editor">
                 <h4 class="new-label-form-title">New label</h4>
 
-                <form accept-charset="UTF-8" action="/@repositoryInfo.owner/@repositoryInfo.name/issues/labels" id="new_label_form" method="post">
+                @helper.form(action = routes.LabelsController.doCreate(repositoryInfo.owner, repositoryInfo.name), 'id -> "new_label_form", 'class -> "edit-color-label-form new-label-form js-new-label-form js-label-editor" ) {
                     <div style="margin:0;padding:0;display:inline">
                         <input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk=">
                     </div>
 
-                    <input type="text" name="label" class="name-input js-name-input" placeholder="New label name" data-hotkey="l">
+                    <input type="text" name="name" class="name-input js-name-input" placeholder="New label name" data-hotkey="l">
                     <ul class="color-chooser js-color-chooser">
                         <li>
                             <span class="color-cooser-color js-color-cooser-color labelstyle-e11d21" style="background-color: #e11d21 !important;" data-hex-color="e11d21">
@@ -260,64 +229,64 @@
                             </span>
                         </li>
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-fbca04" style="background-color: #fbca04 !important;" data-hex-color="fbca04">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-fbca04" style="background-color: #fbca04 !important;" data-hex-color="fbca04">
+                            </span>
                         </li>
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-009800" style="background-color: #009800 !important;" data-hex-color="009800">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-009800" style="background-color: #009800 !important;" data-hex-color="009800">
+                            </span>
                         </li>
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-006b75" style="background-color: #006b75 !important;" data-hex-color="006b75">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-006b75" style="background-color: #006b75 !important;" data-hex-color="006b75">
+                            </span>
                         </li>
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-207de5" style="background-color: #207de5 !important;" data-hex-color="207de5">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-207de5" style="background-color: #207de5 !important;" data-hex-color="207de5">
+                            </span>
                         </li>
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-0052cc" style="background-color: #0052cc !important;" data-hex-color="0052cc">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-0052cc" style="background-color: #0052cc !important;" data-hex-color="0052cc">
+                            </span>
                         </li>
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-5319e7" style="background-color: #5319e7 !important;" data-hex-color="5319e7">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-5319e7" style="background-color: #5319e7 !important;" data-hex-color="5319e7">
+                            </span>
                         </li>
                     </ul>
 
 
                     <ul class="color-chooser js-color-chooser">
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-f7c6c7" style="background-color: #f7c6c7 !important;" data-hex-color="f7c6c7">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-f7c6c7" style="background-color: #f7c6c7 !important;" data-hex-color="f7c6c7">
+                            </span>
                         </li>
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-fad8c7" style="background-color: #fad8c7 !important;" data-hex-color="fad8c7">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-fad8c7" style="background-color: #fad8c7 !important;" data-hex-color="fad8c7">
+                            </span>
                         </li>
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-fef2c0" style="background-color: #fef2c0 !important;" data-hex-color="fef2c0">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-fef2c0" style="background-color: #fef2c0 !important;" data-hex-color="fef2c0">
+                            </span>
                         </li>
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-bfe5bf" style="background-color: #bfe5bf !important;" data-hex-color="bfe5bf">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-bfe5bf" style="background-color: #bfe5bf !important;" data-hex-color="bfe5bf">
+                            </span>
                         </li>
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-bfdadc" style="background-color: #bfdadc !important;" data-hex-color="bfdadc">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-bfdadc" style="background-color: #bfdadc !important;" data-hex-color="bfdadc">
+                            </span>
                         </li>
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-c7def8" style="background-color: #c7def8 !important;" data-hex-color="c7def8">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-c7def8" style="background-color: #c7def8 !important;" data-hex-color="c7def8">
+                            </span>
                         </li>
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-bfd4f2" style="background-color: #bfd4f2 !important;" data-hex-color="bfd4f2">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-bfd4f2" style="background-color: #bfd4f2 !important;" data-hex-color="bfd4f2">
+                            </span>
                         </li>
                         <li>
-                                <span class="color-cooser-color js-color-cooser-color labelstyle-d4c5f9" style="background-color: #d4c5f9 !important;" data-hex-color="d4c5f9">
-                                </span>
+                            <span class="color-cooser-color js-color-cooser-color labelstyle-d4c5f9" style="background-color: #d4c5f9 !important;" data-hex-color="d4c5f9">
+                            </span>
                         </li>
                     </ul>
 
@@ -326,13 +295,13 @@
                         <div class="color-editor-bg js-color-editor-bg"></div>
 
                         <div class="fieldWithErrors">
-                            <input class="color-editor-input js-color-editor-input hexfield" data-original-color="#fc2929" id="label_color" maxlength="7" name="label[color]" size="7" type="text" value="#fc2929">
+                            <input class="color-editor-input js-color-editor-input hexfield" data-original-color="#fc2929" id="label_color" maxlength="7" name="color" size="7" type="text" value="#fc2929">
                         </div>
 
-                        <button type="submit" class="js-label-editor-submit minibutton">Save</button>
+                        <button type="submit" class="js-label-editor-submit minibutton">Create</button>
                         <span class="invalid-color-indicator">?</span>
                     </div>
-                </form>
+                }
             </div>
         </div>
 
@@ -414,7 +383,7 @@
                         <div class="issue-item-unread"></div>
                         <h4 class="list-group-item-name">
                             <span class="type-icon octicon octicon-issue-opened open" title="Open issue"></span>
-                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues/26959" class="js-navigation-open">@issue.content</a>
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues/@issue.issueId" class="js-navigation-open">@issue.title</a>
                         </h4>
                         <ul class="list-group-item-meta">
                             <li>

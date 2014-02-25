@@ -6,7 +6,11 @@ package models
 import java.sql.Date
 import play.api.db.slick.Config.driver.simple._
 
-class IssueTable(tag: Tag) extends Table[Issue](tag, "ISSUE") with IssueTemplate with MilestoneTemplate {
+class IssueTable(tag: Tag) extends Table[Issue](tag, "ISSUE") {
+  def userName = column[String]("USER_NAME")
+  def repositoryName = column[String]("REPOSITORY_NAME")
+  def issueId = column[Option[Int]]("ISSUE_ID", O.PrimaryKey, O.AutoInc)
+  def milestoneId = column[Int]("MILESTONE_ID")
   def openedUserName = column[String]("OPENED_USER_NAME")
   def assignedUserName = column[String]("ASSIGNED_USER_NAME")
   def title = column[String]("TITLE")
@@ -17,7 +21,6 @@ class IssueTable(tag: Tag) extends Table[Issue](tag, "ISSUE") with IssueTemplate
   def pullRequest = column[Boolean]("PULL_REQUEST")
   def * = (userName , repositoryName , issueId , openedUserName , milestoneId.? , assignedUserName.? , title , content.? , closed , registeredDate , updatedDate , pullRequest) <> (Issue.tupled, Issue.unapply _)
 
-  def byPrimaryKey(owner: String, repository: String, issueId: Int) = byIssue(owner, repository, issueId)
 }
 
 case class Issue(
@@ -47,7 +50,13 @@ object IssueDAO {
     query.list
   }
 
-  def create(issue: Issue)(implicit s: Session) {
-    issues.insert(issue)
+  def create(issue: Issue)(implicit s: Session): Int = {
+    val issueId =
+      (issues returning issues.map(_.issueId)) += issue
+    issueId.get
+  }
+
+  def getById(issueId: Int)(implicit  s: Session): Option[Issue] = {
+    issues.where(_.issueId === issueId).firstOption
   }
 }

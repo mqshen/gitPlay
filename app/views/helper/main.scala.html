@@ -1,4 +1,4 @@
-@(baseUrl: String, repositoryInfo: RepositoryService.RepositoryInfo, user: Option[User] = None)(content: Html)
+@(baseUrl: String, repositoryInfo: RepositoryService.RepositoryInfo, user: Option[User] = None, full:Boolean = true, selectIndex: Int = 0)(content: Html)
 
 @import helper._
 @views.html.main("", "", user){
@@ -113,20 +113,20 @@
     </div><!-- /.container -->
 </div>
 <div class="container">
-    <div class="repository-with-sidebar repo-container new-discussion-timeline js-new-discussion-timeline with-full-navigation">
+    <div class="repository-with-sidebar repo-container new-discussion-timeline js-new-discussion-timeline @if(full){with-full-navigation}">
         <div class="repository-sidebar clearfix">
             <div class="sunken-menu vertical-right repo-nav js-repo-nav js-repository-container-pjax js-octicon-loaders">
                 <div class="sunken-menu-contents">
                     <ul class="sunken-menu-group">
                         <li class="tooltipped leftwards" aria-label="Code" original-title="">
-                            <a href="/@repositoryInfo.owner/@repositoryInfo.name" aria-label="Code" class="selected js-selected-navigation-item sunken-menu-item" data-gotokey="c" data-pjax="true" data-selected-links="repo_source repo_downloads repo_commits repo_tags repo_branches /sh2enm3/testj">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name" aria-label="Code" class="@if(selectIndex == 0 ) {selected} js-selected-navigation-item sunken-menu-item" data-gotokey="c" data-pjax="true" data-selected-links="repo_source repo_downloads repo_commits repo_tags repo_branches /sh2enm3/testj">
                                 <span class="octicon octicon-code"></span> <span class="full-word">Code</span>
                                 <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
                             </a>
                         </li>
 
                         <li class="tooltipped leftwards" aria-label="Issues" original-title="">
-                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues" aria-label="Issues" class="js-selected-navigation-item sunken-menu-item js-disable-pjax" data-gotokey="i" data-selected-links="repo_issues /sh2enm3/testj/issues">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues" aria-label="Issues" class="@if(selectIndex == 1 ) {selected} js-selected-navigation-item sunken-menu-item js-disable-pjax" data-gotokey="i" data-selected-links="repo_issues /sh2enm3/testj/issues">
                                 <span class="octicon octicon-issue-opened"></span> <span class="full-word">Issues</span>
                                 <span class="counter">0</span>
                                 <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
@@ -134,14 +134,14 @@
                         </li>
 
                         <li class="tooltipped leftwards" aria-label="Pull Requests" original-title="">
-                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/pulls" aria-label="Pull Requests" class="js-selected-navigation-item sunken-menu-item js-disable-pjax" data-gotokey="p" data-selected-links="repo_pulls /sh2enm3/testj/pulls">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/pulls" aria-label="Pull Requests" class="@if(selectIndex == 2 ) {selected} js-selected-navigation-item sunken-menu-item js-disable-pjax" data-gotokey="p" data-selected-links="repo_pulls /sh2enm3/testj/pulls">
                                 <span class="octicon octicon-git-pull-request"></span> <span class="full-word">Pull Requests</span>
                                 <span class="counter">0</span>
                                 <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
                             </a>
                         </li>
                         <li class="tooltipped leftwards" aria-label="Wiki" original-title="">
-                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/wiki" aria-label="Wiki" class="js-selected-navigation-item sunken-menu-item" data-pjax="true" data-selected-links="repo_wiki /sh2enm3/testj/wiki">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/wiki" aria-label="Wiki" class="@if(selectIndex == 3 ) {selected} js-selected-navigation-item sunken-menu-item" data-pjax="true" data-selected-links="repo_wiki /sh2enm3/testj/wiki">
                                 <span class="octicon octicon-book"></span> <span class="full-word">Wiki</span>
                                 <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
                             </a>
@@ -151,21 +151,21 @@
                     <ul class="sunken-menu-group">
 
                         <li class="tooltipped leftwards" aria-label="Pulse" original-title="">
-                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/pulse" aria-label="Pulse" class="js-selected-navigation-item sunken-menu-item" data-pjax="true" data-selected-links="pulse /sh2enm3/testj/pulse">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/pulse" aria-label="Pulse" class="@if(selectIndex == 4 ) {selected} js-selected-navigation-item sunken-menu-item" data-pjax="true" data-selected-links="pulse /sh2enm3/testj/pulse">
                                 <span class="octicon octicon-pulse"></span> <span class="full-word">Pulse</span>
                                 <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
                             </a>
                         </li>
 
                         <li class="tooltipped leftwards" aria-label="Graphs" original-title="">
-                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/graphs" aria-label="Graphs" class="js-selected-navigation-item sunken-menu-item" data-pjax="true" data-selected-links="repo_graphs repo_contributors /sh2enm3/testj/graphs">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/graphs" aria-label="Graphs" class="@if(selectIndex == 5 ) {selected} js-selected-navigation-item sunken-menu-item" data-pjax="true" data-selected-links="repo_graphs repo_contributors /sh2enm3/testj/graphs">
                                 <span class="octicon octicon-graph"></span> <span class="full-word">Graphs</span>
                                 <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
                             </a>
                         </li>
 
                         <li class="tooltipped leftwards" aria-label="Network" original-title="">
-                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/network" aria-label="Network" class="js-selected-navigation-item sunken-menu-item js-disable-pjax" data-selected-links="repo_network /sh2enm3/testj/network">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/network" aria-label="Network" class="@if(selectIndex == 6 ) {selected} js-selected-navigation-item sunken-menu-item js-disable-pjax" data-selected-links="repo_network /sh2enm3/testj/network">
                                 <span class="octicon octicon-git-branch"></span> <span class="full-word">Network</span>
                                 <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
                             </a>
@@ -174,7 +174,7 @@
                     <div class="sunken-menu-separator"></div>
                     <ul class="sunken-menu-group">
                         <li class="tooltipped leftwards" aria-label="Settings" original-title="">
-                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/settings" class="sunken-menu-item" data-pjax="" aria-label="Settings">
+                            <a href="/@repositoryInfo.owner/@repositoryInfo.name/settings" class="@if(selectIndex == 7 ) {selected} sunken-menu-item" data-pjax="" aria-label="Settings">
                                 <span class="octicon octicon-tools"></span> <span class="full-word">Settings</span>
                                 <img alt="Octocat-spinner-32" class="mini-loader" height="16" src="https://github.global.ssl.fastly.net/images/spinners/octocat-spinner-32.gif" width="16">
                             </a>

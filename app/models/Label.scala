@@ -8,11 +8,11 @@ import java.sql.Date
 import play.api.db.slick.Config.driver.simple._
 
 case class Label(
-  userName: String,
-  repositoryName: String,
-  labelId: Int,
-  labelName: String,
-  color: String){
+  var userName: String,
+  var repositoryName: String,
+  labelId: Option[Int],
+  var labelName: String,
+  var color: String){
 
   val fontColor = {
     val r = color.substring(0, 2)
@@ -38,4 +38,26 @@ class LabelTable(tag: Tag) extends Table[Label](tag, "LABEL") with LabelTemplate
 
 object LabelDAO {
   val labels = TableQuery[LabelTable]
+
+  def getLabels(userName: String, repositoryName: String)(implicit s: Session): List[Label] = {
+    labels.where(_.userName === userName).where(_.repositoryName === repositoryName).list
+  }
+
+  def getLabel(userName: String, repositoryName: String, labelName: String)(implicit s: Session): Option[Label] = {
+    labels.where(_.userName === userName).where(_.repositoryName === repositoryName).where(_.labelName === labelName).firstOption
+  }
+
+  def create(label: Label)(implicit s: Session) {
+    labels.insert(label)
+  }
+
+  def update(userName: String, repositoryName: String, labelName: String, label: Label)(implicit s: Session) {
+    val q = for { l <- labels if l.userName === userName && l.repositoryName === repositoryName && l.labelName === labelName} yield (l.labelName, l.color)
+    q.update(label.labelName, label.color)
+  }
+
+  def delete(userName: String, repositoryName: String, labelName: String)(implicit s: Session) = {
+    labels.where(_.userName === userName).where(_.repositoryName === repositoryName).where(_.labelName === labelName).delete
+  }
+
 }

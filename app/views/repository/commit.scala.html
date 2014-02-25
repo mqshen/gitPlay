@@ -1,6 +1,6 @@
 @(baseUrl: String, commitId: String, commitInfo: JGitUtil.CommitInfo, branches: List[String], tags: List[String], repositoryInfo: RepositoryService.RepositoryInfo, diffs: Seq[JGitUtil.DiffInfo], oldCommitId: Option[String], user: Option[User] = None)
 @import helper._
-@views.html.helper.main(baseUrl, repositoryInfo, user){
+@views.html.helper.main(baseUrl, repositoryInfo, user, false){
 <div class="commit full-commit ">
     <a href="/@repositoryInfo.owner/@repositoryInfo.name/tree/@commitId" class="browse-button" title="Browse the code at this point in the history" rel="nofollow">Browse code</a>
     <p class="commit-title">
