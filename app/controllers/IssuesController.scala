@@ -17,15 +17,17 @@ import scala.Some
 import util.JGitUtil
 import scala.Some
 import models.Issue
+import services.IssuesService.IssueSearchCondition
 
 object IssuesController extends Controller with RepositoryService with Secured {
 
   def index(userName: String, repositoryName: String) = Action { implicit request =>
     DB.withSession{ implicit session =>
       getRepository(userName, repositoryName).map { repositoryInfo =>
-        val issues = IssueDAO.getIssue(userName, repositoryName)
         val labels = LabelDAO.getLabels(userName, repositoryName)
-        Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request)))
+        val condition = IssueSearchCondition(request)
+        val issues = IssueDAO.getIssue(userName, repositoryName, condition)
+        Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request), "", condition))
       }.getOrElse(NotFound)
     }
   }
@@ -41,9 +43,10 @@ object IssuesController extends Controller with RepositoryService with Secured {
           case _ =>
             (Map(), 3)
         }
-        val issues = IssueDAO.getIssue(userName, repositoryName, conditions)
+        val condition = IssueSearchCondition(request)
+        val issues = IssueDAO.getIssue(userName, repositoryName, condition)
         val labels = LabelDAO.getLabels(userName, repositoryName)
-        Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, selectIndex, getSessionUser(request)))
+        Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, selectIndex, getSessionUser(request), "", condition))
       }.getOrElse(NotFound)
     }
   }

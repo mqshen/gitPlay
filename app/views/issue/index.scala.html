@@ -1,4 +1,4 @@
-@(baseUrl: String, currentUrl: String, repositoryInfo: RepositoryService.RepositoryInfo, issues: List[Issue], labels: List[Label], selectIndex: Int, user: Option[User] = None, currentLabels: String = "")
+@(baseUrl: String, currentUrl: String, repositoryInfo: RepositoryService.RepositoryInfo, issues: List[Issue], labels: List[Label], selectIndex: Int, user: Option[User] = None, currentLabels: String = "", condition: IssuesService.IssueSearchCondition)
 @import helper._
 @views.html.helper.main(baseUrl, repositoryInfo, user, true, 1){
 <div class="tabnav tabnav-issues">
@@ -14,30 +14,79 @@
     </ul>
 </div>
 <div id="issues_list" class="js-issues-results columns browser" data-pjax-container="" data-url="/@repositoryInfo.owner/@repositoryInfo.name/issues">
+
+<style type="text/css" media="screen">
+    span.labelstyle-e11d21, .linked-labelstyle-e11d21 {  background-color: #e11d21 !important;  color: #fff !important;}.labelstyle-e11d21.selected {  background-color: #e11d21 !important;  color: #fff !important;}.label-select-menu .labelstyle-e11d21.selected {  background:rgba(225, 29, 33, 0.12) !important;  color: #991316 !important;}
+
+    span.labelstyle-eb6420, .linked-labelstyle-eb6420 {  background-color: #eb6420 !important;  color: #fff !important;}.labelstyle-eb6420.selected {  background-color: #eb6420 !important;  color: #fff !important;}.label-select-menu .labelstyle-eb6420.selected {  background:rgba(235, 100, 32, 0.12) !important;  color: #994114 !important;}
+
+    span.labelstyle-fbca04, .linked-labelstyle-fbca04 {  background-color: #fbca04 !important;  color: #332900 !important;}.labelstyle-fbca04.selected {  background-color: #fbca04 !important;  color: #332900 !important;}.label-select-menu .labelstyle-fbca04.selected {  background:rgba(251, 202, 4, 0.12) !important;  color: #997b02 !important;}
+
+    span.labelstyle-009800, .linked-labelstyle-009800 {  background-color: #009800 !important;  color: #fff !important;}.labelstyle-009800.selected {  background-color: #009800 !important;  color: #fff !important;}.label-select-menu .labelstyle-009800.selected {  background:rgba(0, 152, 0, 0.12) !important;  color: #009900 !important;}
+
+    span.labelstyle-006b75, .linked-labelstyle-006b75 {  background-color: #006b75 !important;  color: #fff !important;}.labelstyle-006b75.selected {  background-color: #006b75 !important;  color: #fff !important;}.label-select-menu .labelstyle-006b75.selected {  background:rgba(0, 107, 117, 0.12) !important;  color: #008b99 !important;}
+
+    span.labelstyle-207de5, .linked-labelstyle-207de5 {  background-color: #207de5 !important;  color: #fff !important;}.labelstyle-207de5.selected {  background-color: #207de5 !important;  color: #fff !important;}.label-select-menu .labelstyle-207de5.selected {  background:rgba(32, 125, 229, 0.12) !important;  color: #155399 !important;}
+
+    span.labelstyle-0052cc, .linked-labelstyle-0052cc {  background-color: #0052cc !important;  color: #fff !important;}.labelstyle-0052cc.selected {  background-color: #0052cc !important;  color: #fff !important;}.label-select-menu .labelstyle-0052cc.selected {  background:rgba(0, 82, 204, 0.12) !important;  color: #003d99 !important;}
+
+    span.labelstyle-5319e7, .linked-labelstyle-5319e7 {  background-color: #5319e7 !important;  color: #fff !important;}.labelstyle-5319e7.selected {  background-color: #5319e7 !important;  color: #fff !important;}.label-select-menu .labelstyle-5319e7.selected {  background:rgba(83, 25, 231, 0.12) !important;  color: #361099 !important;}
+
+    span.labelstyle-f7c6c7, .linked-labelstyle-f7c6c7 {  background-color: #f7c6c7 !important;  color: #332829 !important;}.labelstyle-f7c6c7.selected {  background-color: #f7c6c7 !important;  color: #332829 !important;}.label-select-menu .labelstyle-f7c6c7.selected {  background:rgba(247, 198, 199, 0.12) !important;  color: #997a7b !important;}
+
+    span.labelstyle-fad8c7, .linked-labelstyle-fad8c7 {  background-color: #fad8c7 !important;  color: #332c28 !important;}.labelstyle-fad8c7.selected {  background-color: #fad8c7 !important;  color: #332c28 !important;}.label-select-menu .labelstyle-fad8c7.selected {  background:rgba(250, 216, 199, 0.12) !important;  color: #988479 !important;}
+
+    span.labelstyle-fef2c0, .linked-labelstyle-fef2c0 {  background-color: #fef2c0 !important;  color: #333026 !important;}.labelstyle-fef2c0.selected {  background-color: #fef2c0 !important;  color: #333026 !important;}.label-select-menu .labelstyle-fef2c0.selected {  background:rgba(254, 242, 192, 0.12) !important;  color: #989173 !important;}
+
+    span.labelstyle-bfe5bf, .linked-labelstyle-bfe5bf {  background-color: #bfe5bf !important;  color: #2a332a !important;}.labelstyle-bfe5bf.selected {  background-color: #bfe5bf !important;  color: #2a332a !important;}.label-select-menu .labelstyle-bfe5bf.selected {  background:rgba(191, 229, 191, 0.12) !important;  color: #7f997f !important;}
+
+    span.labelstyle-bfdadc, .linked-labelstyle-bfdadc {  background-color: #bfdadc !important;  color: #2c3233 !important;}.labelstyle-bfdadc.selected {  background-color: #bfdadc !important;  color: #2c3233 !important;}.label-select-menu .labelstyle-bfdadc.selected {  background:rgba(191, 218, 220, 0.12) !important;  color: #849799 !important;}
+
+    span.labelstyle-c7def8, .linked-labelstyle-c7def8 {  background-color: #c7def8 !important;  color: #282d33 !important;}.labelstyle-c7def8.selected {  background-color: #c7def8 !important;  color: #282d33 !important;}.label-select-menu .labelstyle-c7def8.selected {  background:rgba(199, 222, 248, 0.12) !important;  color: #7a8898 !important;}
+
+    span.labelstyle-bfd4f2, .linked-labelstyle-bfd4f2 {  background-color: #bfd4f2 !important;  color: #282c33 !important;}.labelstyle-bfd4f2.selected {  background-color: #bfd4f2 !important;  color: #282c33 !important;}.label-select-menu .labelstyle-bfd4f2.selected {  background:rgba(191, 212, 242, 0.12) !important;  color: #788699 !important;}
+
+    span.labelstyle-d4c5f9, .linked-labelstyle-d4c5f9 {  background-color: #d4c5f9 !important;  color: #2b2833 !important;}.labelstyle-d4c5f9.selected {  background-color: #d4c5f9 !important;  color: #2b2833 !important;}.label-select-menu .labelstyle-d4c5f9.selected {  background:rgba(212, 197, 249, 0.12) !important;  color: #827999 !important;}
+
+    span.labelstyle-fc2929, .linked-labelstyle-fc2929 {  background-color: #fc2929 !important;  color: #fff !important;}.labelstyle-fc2929.selected {  background-color: #fc2929 !important;  color: #fff !important;}.label-select-menu .labelstyle-fc2929.selected {  background:rgba(252, 41, 41, 0.12) !important;  color: #991818 !important;}
+
+    span.labelstyle-cccccc, .linked-labelstyle-cccccc {  background-color: #cccccc !important;  color: #333333 !important;}.labelstyle-cccccc.selected {  background-color: #cccccc !important;  color: #333333 !important;}.label-select-menu .labelstyle-cccccc.selected {  background:rgba(204, 204, 204, 0.12) !important;  color: #999999 !important;}
+
+    span.labelstyle-84b6eb, .linked-labelstyle-84b6eb {  background-color: #84b6eb !important;  color: #1c2733 !important;}.labelstyle-84b6eb.selected {  background-color: #84b6eb !important;  color: #1c2733 !important;}.label-select-menu .labelstyle-84b6eb.selected {  background:rgba(132, 182, 235, 0.12) !important;  color: #557699 !important;}
+
+    span.labelstyle-e6e6e6, .linked-labelstyle-e6e6e6 {  background-color: #e6e6e6 !important;  color: #333333 !important;}.labelstyle-e6e6e6.selected {  background-color: #e6e6e6 !important;  color: #333333 !important;}.label-select-menu .labelstyle-e6e6e6.selected {  background:rgba(230, 230, 230, 0.12) !important;  color: #999999 !important;}
+
+    span.labelstyle-cc317c, .linked-labelstyle-cc317c {  background-color: #cc317c !important;  color: #fff !important;}.labelstyle-cc317c.selected {  background-color: #cc317c !important;  color: #fff !important;}.label-select-menu .labelstyle-cc317c.selected {  background:rgba(204, 49, 124, 0.12) !important;  color: #99245c !important;}
+
+    span.labelstyle-ffffff, .linked-labelstyle-ffffff {  background-color: #ffffff !important;  color: #333333 !important;}.labelstyle-ffffff.selected {  background-color: #ffffff !important;  color: #333333 !important;}.label-select-menu .labelstyle-ffffff.selected {  background:rgba(255, 255, 255, 0.12) !important;  color: #999999 !important;}
+</style>
     <div class="column sidebar issues-list-sidebar js-issue-sidebar">
         <ul class="filter-list js-pjax-active" data-pjax="">
             <li>
-                <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues?state=open" class="filter-item @if(selectIndex == 0){ selected }">
+                <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues@condition.toURL" class="filter-item @if(!condition.createBy.isDefined && !condition.assigned.isDefined ){ selected }">
                     <span class="count">0</span> Everyone’s Issues
                 </a>
             </li>
+            @user.map { user =>
             <li>
-                <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues/assigned/@repositoryInfo.owner?state=open" class="filter-item @if(selectIndex == 1){ selected }">
+                <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues/assigned/@user.userName@condition.toURL" class="filter-item @if(condition.assigned.isDefined ){ selected }">
                     <span class="count">0</span> Assigned to you
                 </a>
             </li>
 
             <li>
-                <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues/created_by/@repositoryInfo.owner?state=open" class="filter-item @if(selectIndex == 2){ selected }">
+                <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues/created_by/@user.userName@condition.toURL" class="filter-item @if(condition.createBy.isDefined){ selected }">
                     <span class="count">0</span> Created by you
                 </a>
             </li>
-
+            }
+            <!--
             <li>
                 <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues/mentioned/@repositoryInfo.owner?state=open" class="filter-item @if(selectIndex == 3){ selected }">
                     <span class="count">0</span> Mentioning you
                 </a>
             </li>
+            -->
         </ul>
 
         <div class="rule"></div>
@@ -86,8 +135,8 @@
                 <h4>Labels</h4>
                 @labels.map { label =>
                 <li>
-                    <a href="@(currentUrl)&amp;labels=bug&amp;page=1&amp;state=open"
-                       class="filter-item color-label  labelstyle-@label.color zeroed" data-label="bug" rel="nofollow">
+                    <a href="@condition.copy(labels = (if(condition.labels.contains(label.labelName)) condition.labels - label.labelName else condition.labels + label.labelName)).toURL"
+                       class="filter-item color-label  labelstyle-@label.color zeroed  @if(condition.labels.contains(label.labelName)){ selected }" data-label="bug" rel="nofollow">
                         <span class="count">0</span>
                         <span class="color" style="background-color: #@label.color">&nbsp;</span>
                         <span class="octicon octicon-remove-close"></span>
@@ -312,10 +361,10 @@
     <div class="column main">
         <div class="issues-list-options" data-pjax="">
             <div class="button-group">
-                <a href="@(currentUrl)&amp;page=1&amp;state=open" class="minibutton selected">
+                <a href="@condition.copy(state = "open").toURL" class="minibutton @if(condition.state == "open") {selected}">
                     0 Open
                 </a>
-                <a href="@(currentUrl)&amp;page=1&amp;state=closed" class="minibutton ">
+                <a href="@condition.copy(state = "closed").toURL" class="minibutton @if(condition.state == "closed") {selected}">
                     0 Closed
                 </a>
             </div>
@@ -378,16 +427,280 @@
                     </div>
                 } else {
                 <ul class="list-group issue-list-group">
+                    <li class="list-group-item issues-list-actions">
+                        <div class="js-buttons button-wrap">
+                        <label class="select-all">
+                            <input type="checkbox" class="js-issues-list-select-all">
+                        </label>
+
+                        <a href="#" class="button minibutton js-issues-list-close js-mass-assign-button disabled" data-hotkey="e" data-url="/mqshen/gitPlay/issues/close">Close</a>
+
+                        <div class="select-menu label-select-menu js-issue-list-label-select-menu js-issue-mass-assign js-menu-container js-select-menu" data-multiple="">
+
+                            <a href="#" class="button minibutton js-menu-target dropdown-button js-mass-assign-button disabled">Label</a>
+
+                            <form accept-charset="UTF-8" action="/mqshen/gitPlay/issues/labels/modify_assignment" method="post"><div style="margin:0;padding:0;display:inline"><input name="_method" type="hidden" value="put"><input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk="></div>
+
+
+                                <div class="select-menu-modal-holder js-menu-content js-navigation-container" aria-hidden="true">
+
+                                    <div class="select-menu-modal">
+                                        <div class="select-menu-header">
+                                            <span class="select-menu-title">Apply labels to this issue</span>
+                                            <span class="octicon octicon-remove-close js-menu-close"></span>
+                                        </div> <!-- /.select-menu-header -->
+
+                                        <div class="select-menu-error-shell">
+                                            <span class="select-menu-error js-select-menu-error">Whoops, there was an error</span>
+                                        </div>
+
+                                        <div class="select-menu-filters">
+                                            <div class="select-menu-text-filter">
+                                                <input type="text" id="label-filter-field" class="js-filterable-field js-navigation-enable" placeholder="Filter labels" autocomplete="off">
+                                            </div>
+                                        </div> <!-- /.select-menu-filters -->
+
+                                        <div class="select-menu-list" data-filterable-for="label-filter-field" data-filterable-type="substring">
+
+                                            <div class="select-menu-item js-navigation-item labelstyle-fc2929 ">
+                                                <span class="select-menu-item-icon octicon octicon-check"></span>
+                                                <div class="select-menu-item-text">
+                                                    <div class="color-label-wrapper">
+                                                        <div data-name="bug" class="color-label labelstyle-fc2929">
+                                                            <input style="display: none" type="checkbox" value="bug" name="labels[]">
+                                                            <span class="color" style="background-color: #fc2929"></span>
+                                                            <span class="name">bug</span>
+                                                            <span class="octicon octicon-remove-close"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- /.select-menu-item -->
+                                            <div class="select-menu-item js-navigation-item labelstyle-cccccc ">
+                                                <span class="select-menu-item-icon octicon octicon-check"></span>
+                                                <div class="select-menu-item-text">
+                                                    <div class="color-label-wrapper">
+                                                        <div data-name="duplicate" class="color-label labelstyle-cccccc">
+                                                            <input style="display: none" type="checkbox" value="duplicate" name="labels[]">
+                                                            <span class="color" style="background-color: #cccccc"></span>
+                                                            <span class="name">duplicate</span>
+                                                            <span class="octicon octicon-remove-close"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- /.select-menu-item -->
+                                            <div class="select-menu-item js-navigation-item labelstyle-84b6eb ">
+                                                <span class="select-menu-item-icon octicon octicon-check"></span>
+                                                <div class="select-menu-item-text">
+                                                    <div class="color-label-wrapper">
+                                                        <div data-name="enhancement" class="color-label labelstyle-84b6eb">
+                                                            <input style="display: none" type="checkbox" value="enhancement" name="labels[]">
+                                                            <span class="color" style="background-color: #84b6eb"></span>
+                                                            <span class="name">enhancement</span>
+                                                            <span class="octicon octicon-remove-close"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- /.select-menu-item -->
+                                            <div class="select-menu-item js-navigation-item labelstyle-e6e6e6 ">
+                                                <span class="select-menu-item-icon octicon octicon-check"></span>
+                                                <div class="select-menu-item-text">
+                                                    <div class="color-label-wrapper">
+                                                        <div data-name="invalid" class="color-label labelstyle-e6e6e6">
+                                                            <input style="display: none" type="checkbox" value="invalid" name="labels[]">
+                                                            <span class="color" style="background-color: #e6e6e6"></span>
+                                                            <span class="name">invalid</span>
+                                                            <span class="octicon octicon-remove-close"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- /.select-menu-item -->
+                                            <div class="select-menu-item js-navigation-item labelstyle-cc317c ">
+                                                <span class="select-menu-item-icon octicon octicon-check"></span>
+                                                <div class="select-menu-item-text">
+                                                    <div class="color-label-wrapper">
+                                                        <div data-name="question" class="color-label labelstyle-cc317c">
+                                                            <input style="display: none" type="checkbox" value="question" name="labels[]">
+                                                            <span class="color" style="background-color: #cc317c"></span>
+                                                            <span class="name">question</span>
+                                                            <span class="octicon octicon-remove-close"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- /.select-menu-item -->
+                                            <div class="select-menu-item js-navigation-item labelstyle-009800 ">
+                                                <span class="select-menu-item-icon octicon octicon-check"></span>
+                                                <div class="select-menu-item-text">
+                                                    <div class="color-label-wrapper">
+                                                        <div data-name="rrrrrr" class="color-label labelstyle-009800">
+                                                            <input style="display: none" type="checkbox" value="rrrrrr" name="labels[]">
+                                                            <span class="color" style="background-color: #009800"></span>
+                                                            <span class="name">rrrrrr</span>
+                                                            <span class="octicon octicon-remove-close"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- /.select-menu-item -->
+
+                                        </div> <!-- /.select-menu-list -->
+
+                                        <div class="select-menu-no-results js-not-filterable">Nothing to show</div>
+
+                                        <div class="select-menu-footer">
+                                            <a href="#" class="minibutton primary js-apply-labels">Apply</a>
+                                            <a href="#" class="minibutton primary js-remove-labels">Remove</a>
+                                        </div> <!-- /.select-menu-footer -->
+
+                                        <div class="select-menu-loading-overlay">Loading…</div>
+                                    </div> <!-- /.select-menu-modal -->
+                                </div> <!-- /.select-menu-modal-holder -->
+
+                            </form>
+                        </div>
+
+                        <div class="select-menu js-menu-container js-select-menu js-assignee-picker js-issue-mass-assign is-showing-clear-item">
+                            <a href="#" class="button minibutton js-menu-target dropdown-button js-mass-assign-button disabled">Assignee</a>
+
+                            <div class="select-menu-modal-holder js-menu-content js-navigation-container">
+
+                                <div class="select-menu-modal">
+                                    <div class="select-menu-header">
+                                        <span class="select-menu-title">Assign someone to this issue</span>
+                                        <span class="octicon octicon-remove-close js-menu-close"></span>
+                                    </div> <!-- /.select-menu-header -->
+
+                                    <div class="select-menu-error-shell"><span class="select-menu-error js-select-menu-error">Sorry, an error occurred</span></div>
+
+                                    <div class="select-menu-filters">
+                                        <div class="select-menu-text-filter">
+                                            <input type="text" id="assignee-filter-field" class="js-filterable-field js-navigation-enable" placeholder="Filter people">
+                                        </div>
+                                    </div> <!-- /.select-menu-filters -->
+
+                                    <form accept-charset="UTF-8" action="/mqshen/gitPlay/issues/assign" method="post"><div style="margin:0;padding:0;display:inline"><input name="_method" type="hidden" value="put"><input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk="></div>
+
+                                        <div class="select-menu-list">
+
+                                            <div class="select-menu-clear-item select-menu-item js-navigation-item js-clear-assignee js-no-current-assignee">
+                                                <input name="[assignee]" type="radio" value="">
+                                                <span class="select-menu-item-icon octicon octicon-remove-close"></span>
+                                                <div class="select-menu-item-text">Clear assignee</div>
+                                            </div> <!-- /.select-menu-item -->
+
+                                            <div data-filterable-for="assignee-filter-field" data-filterable-type="fuzzy">
+                                                <div class="select-menu-item js-navigation-item">
+                                                    <input name="[assignee]" type="radio" value="mqshen">
+                                                    <span class="select-menu-item-icon octicon octicon-check"></span>
+                                                    <div class="select-menu-item-gravatar js-select-menu-item-gravatar">
+                                                        <img alt="miaoqi shen" class=" js-avatar" data-user="687580" height="30" src="https://avatars.githubusercontent.com/u/687580" width="30">
+                                                    </div>
+                                                    <div class="select-menu-item-text">
+                                                        <h4>mqshen <span class="description">miaoqi shen</span></h4>
+                                                    </div>
+                                                </div> <!-- /.select-menu-item -->
+                                            </div>
+                                        </div> <!-- /.select-menu-list -->
+                                    </form>
+                                    <div class="select-menu-loading-overlay">Loading…</div>
+
+                                </div> <!-- /.select-menu-modal -->
+                            </div> <!-- /.select-menu-modal-holder -->
+                        </div> <!-- /.select-menu -->
+
+                        <div class="select-menu js-menu-container js-select-menu js-milestone-picker js-issue-mass-assign is-showing-clear-item">
+                            <a href="#" class="button minibutton js-menu-target dropdown-button js-mass-assign-button disabled">Milestone</a>
+
+                            <!--
+                            <span class="minibutton select-menu-button js-menu-target">
+                              <span class="js-select-button">Milestone</span>
+                            </span>
+                            -->
+                            <div class="select-menu-modal-holder js-menu-content js-navigation-container" aria-hidden="true">
+
+                                <div class="select-menu-modal">
+                                    <div class="select-menu-header">
+                                        <span class="select-menu-title">Set milestone</span>
+                                        <span class="octicon octicon-remove-close js-menu-close"></span>
+                                    </div> <!-- /.select-menu-header -->
+
+                                    <form accept-charset="UTF-8" action="/mqshen/gitPlay/issues/milestone" method="post"><div style="margin:0;padding:0;display:inline"><input name="_method" type="hidden" value="put"><input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk="></div>
+                                        <div class="js-milestone-picker-body">
+
+
+                                            <div class="select-menu-error-shell"><span class="select-menu-error js-select-menu-error">Sorry, an error occurred</span></div>
+
+                                            <div class="select-menu-filters">
+                                                <div class="select-menu-text-filter">
+                                                    <input type="text" id="context-milestone-filter-field" class="js-filterable-field js-navigation-enable" placeholder="Filter milestones" autocomplete="off">
+                                                </div>
+                                                <div class="select-menu-tabs">
+                                                    <ul>
+                                                        <li class="select-menu-tab">
+                                                            <a href="#" data-tab-filter="tab-open" class="js-select-menu-tab">Open</a>
+                                                        </li>
+                                                        <li class="select-menu-tab">
+                                                            <a href="#" data-tab-filter="tab-closed" class="js-select-menu-tab">Closed</a>
+                                                        </li>
+                                                    </ul>
+                                                </div><!-- /.select-menu-tabs -->
+                                            </div><!-- /.select-menu-filters -->
+
+                                            <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="tab-open">
+
+                                                <div class="select-menu-clear-item select-menu-item js-navigation-item js-clear-milestone">
+                                                    <input id="milestone_clear" name="milestone" type="radio" value="clear">
+                                                    <span class="select-menu-item-icon octicon octicon-remove-close"></span>
+                                                    <div class="select-menu-item-text">Clear this milestone</div>
+                                                </div> <!-- /.select-menu-item -->
+
+                                                <div data-filterable-for="context-milestone-filter-field" data-filterable-type="substring" role="menu">
+
+                                                </div>
+
+                                                <div class="select-menu-item select-menu-new-item-form js-navigation-item js-new-item-form">
+                                                    <input type="radio" name="milestone" value="new">
+                                                    <input type="hidden" class="js-new-item-value" name="milestone_title">
+
+                                                    <span class="octicon octicon-milestone select-menu-item-icon"></span>
+                                                    <div class="select-menu-item-text">
+                                                        <h4>Create and assign to new milestone:</h4>
+                                                        <span class="description js-new-item-name js-milestone-title"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="select-menu-no-results">Nothing to show</div>
+                                            </div> <!-- /.select-menu-list -->
+
+                                            <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="tab-closed">
+
+                                                <div data-filterable-for="context-milestone-filter-field" data-filterable-type="substring" role="menu">
+
+                                                </div>
+
+                                                <div class="select-menu-no-results">Nothing to show</div>
+                                            </div> <!-- /.select-menu-list -->
+
+                                        </div>
+                                    </form>
+                                </div> <!-- /.select-menu-modal -->
+                            </div> <!-- /.select-menu-modal-holder -->
+                        </div> <!-- /.select-menu -->
+                        </div>
+                    </li>
                     @issues.zipWithIndex.map { case (issue, i) =>
-                    <li id="issue_26959" class="list-group-item issue-list-item js-list-browser-item js-navigation-item read">
+                    <li id="issue_26959" class="list-group-item issue-list-item js-list-browser-item js-navigation-item read selectable">
                         <div class="issue-item-unread"></div>
+                        <input type="checkbox" class="list-group-item-check js-issues-list-checkbox select-toggle-check" name="issues[]" value="@issue.issueId">
                         <h4 class="list-group-item-name">
-                            <span class="type-icon octicon octicon-issue-opened open" title="Open issue"></span>
+                            @if(issue.closed) {
+                                <span class="type-icon octicon octicon-issue-closed closed" title="Closed issue"></span>
+                            } else {
+                                <span class="type-icon octicon octicon-issue-opened open" title="Open issue"></span>
+                            }
                             <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues/@issue.issueId" class="js-navigation-open">@issue.title</a>
                         </h4>
                         <ul class="list-group-item-meta">
                             <li>
-                                Opened by <a href="/@issue.openedUserName">@issue.openedUserName</a>
+                                @if(issue.closed) { Closed } else { Opened }by <a href="/@issue.openedUserName">@issue.openedUserName</a>
                                 <time class="js-relative-date" data-title-format="YYYY-MM-DD HH:mm:ss" datetime="@issue.updatedDate" title="@issue.updatedDate">3 hours ago</time>
                             </li>
                         </ul>

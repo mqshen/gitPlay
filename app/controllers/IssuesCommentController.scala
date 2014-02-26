@@ -14,6 +14,7 @@ import scala.Some
 import util.JGitUtil
 import scala.Some
 import models.Issue
+import services.IssuesService.IssueSearchCondition
 
 /**
  * Created by GoldRatio on 2/25/14.
@@ -24,18 +25,19 @@ object IssuesCommentController extends Controller with RepositoryService with Se
 
     mapping(
       "issueId" -> number,
-      "content" -> text(minLength = 6)
+      "content" -> optional(text),
+      "action" -> optional(text)
     )
     {
       // Binding: Create a User from the mapping result (ignore the second password and the accept field)
-      (issueIde, content) => {
+      (issueIde, content, action) => {
         val currentDate = new Date(System.currentTimeMillis())
-        IssueComment("", "", issueIde, None, "", "", content, currentDate, currentDate)
+        IssueComment("", "", issueIde, None, action, "", content, currentDate, currentDate)
       }
     }
     {
       // Unbinding: Create the mapping values from an existing User value
-      comment => Some(comment.issueId, comment.content)
+      comment => Some(comment.issueId, comment.content, comment.action)
     }
   )
 
@@ -45,15 +47,22 @@ object IssuesCommentController extends Controller with RepositoryService with Se
         getRepository(userName, repositoryName).map { repositoryInfo =>
           createForm.bindFromRequest.fold(
             errors => {
-              val issues = IssueDAO.getIssue(userName, repositoryName)
+              val issues = IssueDAO.getIssueAll(userName, repositoryName)
               val labels = LabelDAO.getLabels(userName, repositoryName)
-              Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request)))
+              val condition = IssueSearchCondition(request)
+              Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request), "", condition))
             },
             comment => {
               comment.userName = userName
               comment.repositoryName = repositoryName
               comment.commentedUserName = user.userName
               IssueCommentDAO.create(comment)
+              comment.action.map { action =>
+                if(action == "reopen")
+                  IssueDAO.reopen(comment.issueId)
+                else if(action == "close")
+                  IssueDAO.close(comment.issueId)
+              }
               request.headers.get("Referer") .map { referer =>
                 Redirect(referer)
               }.getOrElse(NotFound)

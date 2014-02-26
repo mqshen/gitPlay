@@ -14,3 +14,5 @@ drop table `REPOSITORY`
 drop table `ISSUE_COMMENT`
 
 drop table `ISSUE`
+
+drop table `ISSUE_LABEL`

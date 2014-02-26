@@ -22,3 +22,5 @@ play.Project.playScalaSettings
 templatesImport += "services.RepositoryService"
 
 templatesImport += "util.JGitUtil"
+
+templatesImport += "services.IssuesService"

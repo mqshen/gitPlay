@@ -109,6 +109,7 @@
                 </div>
 
                 <div class="discussion-sidebar-item">
+                    <!--
 
                     <div id="js-users-participants" class="js-socket-channel js-updatable-content" data-channel="@repositoryInfo.owner/@repositoryInfo.name:issue:27571573" data-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=participants">
                         <div class="pull-participation">
@@ -132,7 +133,7 @@
                             </li>
                         </ul>
                     </div>
-
+                    -->
 
                 </div>
 
@@ -174,40 +175,67 @@
 
                     </div>
                     @comments.map {comment =>
-                    <div class="timeline-comment-wrapper js-comment-container">
-                        <a href="/@comment.commentedUserName">
-                            <img alt="Felipe Rocha" class="timeline-comment-avatar js-avatar" data-user="366457" height="48"
-                                 src="" width="48">
-                        </a>
+                        @if(!comment.content.isEmpty) {
+                            <div class="timeline-comment-wrapper js-comment-container">
+                                <a href="/@comment.commentedUserName">
+                                    <img alt="Felipe Rocha" class="timeline-comment-avatar js-avatar" data-user="366457" height="48"
+                                         src="" width="48">
+                                </a>
 
-                        <div class="timeline-comment timeline-comment-">
-                            <div id="issuecomment-@comment.commentId" class="comment js-comment js-task-list-container" data-body-version="250e71b36e2613c5a7cc01873d8e99fe">
-                                <div class="timeline-comment-header ">
-                                    <div class="timeline-comment-header-text">
-                                        <strong>
-                                            <a href="/@issue.openedUserName" class="author">@comment.commentedUserName</a>
-                                        </strong>
-                                        commented
-                                        <a href="#issue-27571573" class="timestamp">
-                                            <time class="js-relative-date" data-title-format="YYYY-MM-DD HH:mm:ss" datetime="2014-02-13T19:25:10-08:00" title="2014-02-14 11:25:10">11 days ago</time>
-                                        </a>
+                                <div class="timeline-comment timeline-comment-">
+                                    <div id="issuecomment-@comment.commentId" class="comment js-comment js-task-list-container" data-body-version="250e71b36e2613c5a7cc01873d8e99fe">
+                                        <div class="timeline-comment-header ">
+                                            <div class="timeline-comment-header-text">
+                                                <strong>
+                                                    <a href="/@issue.openedUserName" class="author">@comment.commentedUserName</a>
+                                                </strong>
+                                                commented
+                                                <a href="#issue-27571573" class="timestamp">
+                                                    <time class="js-relative-date" data-title-format="YYYY-MM-DD HH:mm:ss" datetime="2014-02-13T19:25:10-08:00" title="2014-02-14 11:25:10">11 days ago</time>
+                                                </a>
 
-                                    </div>
-                                </div>
+                                            </div>
+                                        </div>
 
-                                <div class="comment-content">
+                                        <div class="comment-content">
 
-                                    <div class="edit-comment-hide">
-                                        <div class="comment-body markdown-body markdown-format js-comment-body">
-                                            @comment.content
+                                            <div class="edit-comment-hide">
+                                                <div class="comment-body markdown-body markdown-format js-comment-body">
+                                                    @comment.content
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
-
                                 </div>
-                            </div>
-                        </div>
 
-                    </div>
+                            </div>
+                        }
+                        @comment.action.map { action =>
+                            @if(action == "reopen") {
+                                <div class="discussion-item discussion-event discussion-event-status-reopened">
+                                    <div class="discussion-item-body">
+                                        <span class="octicon octicon-primitive-dot discussion-item-icon"></span>
+                                        <img alt="@comment.commentedUserName" class="avatar js-avatar" data-user="687580" height="16" src="https://avatars.githubusercontent.com/u/687580" width="16">
+                                        <a href="/@comment.commentedUserName" class="author">@comment.commentedUserName</a>
+                                        reopened the issue
+                                        <time class="js-relative-date" data-title-format="YYYY-MM-DD HH:mm:ss" datetime="2014-02-25T17:32:21-08:00" title="2014-02-26 09:32:21">6 minutes ago</time>
+                                    </div>
+                                </div>
+                            }
+                            @if(action == "close") {
+                                <div class="discussion-item discussion-event discussion-event-status-closed">
+                                    <div class="discussion-item-body">
+                                        <span class="octicon octicon-circle-slash discussion-item-icon"></span>
+                                        <img alt="@comment.commentedUserName" class="avatar js-avatar" data-user="687580" height="16" src="https://avatars.githubusercontent.com/u/687580" width="16">
+                                        <a href="/@comment.commentedUserName" class="author">@comment.commentedUserName</a>
+                                        closed the issue
+
+                                        <time class="js-relative-date" data-title-format="YYYY-MM-DD HH:mm:ss" datetime="2014-02-25T17:33:02-08:00" title="2014-02-26 09:33:02">6 minutes ago</time>
+                                    </div>
+                                </div>
+                            }
+                        }
                     }
                 </div>
 
@@ -298,11 +326,15 @@
                                 <div class="form-actions">
 
                                     <div id="js-new-comment-form-actions" class="js-socket-channel js-updatable-content" data-channel="@repositoryInfo.owner/@repositoryInfo.name:issue:27571573:state" data-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=form_actions">
-
-
-
-
-
+                                        @if(issue.closed) {
+                                        <button type="submit" name="action" value="reopen" class="button js-comment-and-button" data-original-text="Close" data-comment-text="Reopen &amp; Comment" tabindex="3" data-disable-with="">
+                                            Reopen
+                                        </button>
+                                        } else {
+                                        <button type="submit" name="action" value="close" class="button js-comment-and-button" data-original-text="Close" data-comment-text="Close &amp; Comment" tabindex="3" data-disable-with="">
+                                            Close
+                                        </button>
+                                        }
                                         <button type="submit" class="button primary" tabindex="2" data-disable-with="">
                                             Comment
                                         </button>

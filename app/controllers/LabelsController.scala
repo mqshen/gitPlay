@@ -17,6 +17,7 @@ import scala.Some
 import util.JGitUtil
 import scala.Some
 import models.Issue
+import services.IssuesService.IssueSearchCondition
 
 object LabelsController extends Controller with RepositoryService with Secured {
 
@@ -45,9 +46,10 @@ object LabelsController extends Controller with RepositoryService with Secured {
         getRepository(userName, repositoryName).map { repositoryInfo =>
           createForm.bindFromRequest.fold(
             errors => {
-              val issues = IssueDAO.getIssue(userName, repositoryName)
+              val issues = IssueDAO.getIssueAll(userName, repositoryName)
               val labels = LabelDAO.getLabels(userName, repositoryName)
-              Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request)))
+              val condition = IssueSearchCondition(request)
+              Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request), "", condition))
             },
             label => {
               label.userName = userName
@@ -69,9 +71,10 @@ object LabelsController extends Controller with RepositoryService with Secured {
         getRepository(userName, repositoryName).map { repositoryInfo =>
           createForm.bindFromRequest.fold(
             errors => {
-              val issues = IssueDAO.getIssue(userName, repositoryName)
+              val issues = IssueDAO.getIssueAll(userName, repositoryName)
               val labels = LabelDAO.getLabels(userName, repositoryName)
-              Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request)))
+              val condition = IssueSearchCondition(request)
+              Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request), "", condition))
             },
             label => {
               LabelDAO.update(userName, repositoryName, labelName, label)

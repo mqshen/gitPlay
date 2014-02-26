@@ -243,7 +243,9 @@
                     </div> <!-- /.select-menu-list -->
 
 
-                    <div class="fieldWithErrors"><input id="issue_milestone_id" name="issue[milestone_id]" type="hidden"></div>
+                    <div class="fieldWithErrors">
+                        <input id="issue_milestone_id" name="milestoneId" type="hidden">
+                    </div>
                     <input id="new_milestone_title" name="new_milestone_title" type="hidden">
                 </div> <!-- /.select-menu-modal -->
             </div> <!-- /.select-menu-modal-holder -->
@@ -354,7 +356,7 @@
         <li data-name="bug">
             <a href="#" class="filter-item color-label labelstyle-@label.color">
 
-                <input style="display: none" type="checkbox" value="bug" id="issue_labels_bug" name="labels[]">
+                <input style="display: none" type="checkbox" value="@label.labelId" id="issue_labels_bug" name="labels[]">
                 <span class="color" style="background-color: #@label.color">&nbsp;</span>
                 <span class="name">@label.labelName</span>
             </a>

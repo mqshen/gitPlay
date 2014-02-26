@@ -9,6 +9,7 @@ import play.api.db.slick.Config.driver.simple._
 import models.Label
 import scala.Some
 import models.Issue
+import play.api.mvc.{Request, AnyContent}
 
 trait IssuesService {
   /*
@@ -55,29 +56,57 @@ trait IssuesService {
 
 }
 object IssuesService {
-  import javax.servlet.http.HttpServletRequest
 
   val IssueLimit = 30
 
   case class IssueSearchCondition(
-                                   labels: Set[String] = Set.empty,
-                                   milestoneId: Option[Option[Int]] = None,
-                                   repo: Option[String] = None,
-                                   state: String = "open",
-                                   sort: String = "created",
-                                   direction: String = "desc"){
+     labels: Set[String] = Set.empty,
+     milestoneId: Option[Int] = None,
+     repo: Option[String] = None,
+     state: String = "open",
+     sort: String = "created",
+     direction: String = "desc",
+     createBy: Option[String] = None,
+     assigned: Option[String] = None){
 
     def toURL: String =
       "?" + List(
         if(labels.isEmpty) None else Some("labels=" + urlEncode(labels.mkString(","))),
-        milestoneId.map { id => "milestone=" + (id match {
-          case Some(x) => x.toString
-          case None    => "none"
-        })},
+        milestoneId.map { id =>
+          id.toString
+        },
         repo.map("for="   + urlEncode(_)),
         Some("state="     + urlEncode(state)),
         Some("sort="      + urlEncode(sort)),
         Some("direction=" + urlEncode(direction))).flatten.mkString("&")
 
   }
+
+  object IssueSearchCondition {
+
+    def apply(request: Request[AnyContent]): IssueSearchCondition =
+      new IssueSearchCondition(
+        request.getQueryString("labels").map(_.split(",").toSet).getOrElse(Set.empty),
+        /*
+        param(request, "milestone").map{
+          case "none" => None
+          case x      => x.toIntOpt
+        },
+        */
+        request.getQueryString("milestone").map{
+          case x    => x.toInt
+        },
+        request.getQueryString("for"),
+        request.getQueryString("state").getOrElse("open"),
+        request.getQueryString("sort").getOrElse("created"),
+        request.getQueryString("direction").getOrElse("desc"))
+
+    def page(request: Request[AnyContent]) = try {
+      val i = request.getQueryString("page").getOrElse("1").toInt
+      if(i <= 0) 1 else i
+    } catch {
+      case e: NumberFormatException => 1
+    }
+  }
+
 }

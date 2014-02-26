@@ -5,6 +5,7 @@ package models
  */
 import java.sql.Date
 import play.api.db.slick.Config.driver.simple._
+import services.IssuesService.IssueSearchCondition
 
 class IssueTable(tag: Tag) extends Table[Issue](tag, "ISSUE") {
   def userName = column[String]("USER_NAME")
@@ -41,7 +42,7 @@ case class Issue(
 object IssueDAO {
   val issues = TableQuery[IssueTable]
 
-  def getIssue(userName: String, repositoryName: String, conditions: Map[String, String] = Map())(implicit s: Session): List[Issue] = {
+  def getIssueAll(userName: String, repositoryName: String, conditions: Map[String, String] = Map())(implicit s: Session): List[Issue] = {
     var query = issues.where(_.userName === userName)
       .where(_.repositoryName === repositoryName)
     conditions.map { condition:(String, String) =>
@@ -50,10 +51,41 @@ object IssueDAO {
     query.list
   }
 
+  def getIssue(userName: String, repositoryName: String, condition: IssueSearchCondition)(implicit s: Session): List[Issue] = {
+    val q = issues.filter { i =>
+      (i.closed === (condition.state == "closed")) &&
+        ((i.milestoneId === condition.milestoneId) || (condition.milestoneId == None)) &&
+        ((i.assignedUserName === condition.assigned) || (condition.assigned == None)) &&
+        ((i.openedUserName === condition.createBy) || (condition.createBy == None))
+    }
+    q.list()
+    /*
+    val q = for { i <- issues
+                  if (i.closed === (condition.state == "closed")) &&
+                    (i.milestoneId === condition.milestoneId, condition.milestoneId.isDefined) &&
+                    (i.milestoneId isNull, condition.milestoneId == None)
+    } yield i.*
+    */
+  }
+
   def create(issue: Issue)(implicit s: Session): Int = {
     val issueId =
       (issues returning issues.map(_.issueId)) += issue
     issueId.get
+  }
+
+  def setColseState(issueId: Int, closed: Boolean)(implicit s: Session) {
+    val q = for { i <- issues if i.issueId === issueId} yield i.closed
+    q.update(closed)
+  }
+
+  def reopen(issueId: Int)(implicit s: Session) {
+    setColseState(issueId, false)
+  }
+
+  def close(issueId: Int)(implicit s: Session) {
+    val q = for { i <- issues if i.issueId === issueId} yield i.closed
+    setColseState(issueId, true)
   }
 
   def getById(issueId: Int)(implicit  s: Session): Option[Issue] = {

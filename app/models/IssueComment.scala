@@ -11,9 +11,9 @@ var userName: String,
 var repositoryName: String,
 var issueId: Int,
 commentId: Option[Int],
-action: String,
+action: Option[String],
 var commentedUserName: String,
-content: String,
+content: Option[String],
 registeredDate: Date,
 updatedDate: Date
 )
@@ -23,9 +23,9 @@ class IssueCommentTable(tag: Tag) extends Table[IssueComment](tag, "ISSUE_COMMEN
   def repositoryName = column[String]("REPOSITORY_NAME")
   def issueId = column[Int]("ISSUE_ID")
   def commentId = column[Option[Int]]("COMMENT_ID", O.PrimaryKey, O.AutoInc)
-  def action = column[String]("ACTION")
+  def action = column[Option[String]]("ACTION")
   def commentedUserName = column[String]("COMMENTED_USER_NAME")
-  def content = column[String]("CONTENT")
+  def content = column[Option[String]]("CONTENT")
   def registeredDate = column[Date]("REGISTERED_DATE")
   def updatedDate = column[Date]("UPDATED_DATE")
   def * = (userName , repositoryName , issueId , commentId , action , commentedUserName , content , registeredDate , updatedDate) <> (IssueComment.tupled, IssueComment.unapply _)
