@@ -6,6 +6,7 @@ package models
 import java.sql.Date
 import play.api.db.slick.Config.driver.simple._
 import services.IssuesService.IssueSearchCondition
+import util.Implicits._
 
 class IssueTable(tag: Tag) extends Table[Issue](tag, "ISSUE") {
   def userName = column[String]("USER_NAME")
@@ -51,14 +52,59 @@ object IssueDAO {
     query.list
   }
 
-  def getIssue(userName: String, repositoryName: String, condition: IssueSearchCondition)(implicit s: Session): List[Issue] = {
+  def getIssue(userName: String, repositoryName: String, condition: IssueSearchCondition)(implicit s: Session): List[(Issue, List[Label])] = {
     val q = issues.filter { i =>
       (i.closed === (condition.state == "closed")) &&
         ((i.milestoneId === condition.milestoneId) || (condition.milestoneId == None)) &&
         ((i.assignedUserName === condition.assigned) || (condition.assigned == None)) &&
         ((i.openedUserName === condition.createBy) || (condition.createBy == None))
+    }.leftJoin(IssueLabelDAO.issueLabels)
+      .on { case (t1, t2) =>
+        t1.userName === t2.userName &&
+          t1.repositoryName === t2.repositoryName &&
+          t1.issueId === t2.issueId}
+      .leftJoin (LabelDAO.labels).on { case ((t1, t2), t3) =>
+        t2.userName === t3.userName &&
+          t2.repositoryName === t3.repositoryName &&
+          t2.labelName === t3.labelName
+      }
+      .map { case ((t1, t2), t3) =>
+      (t1, t3.labelId.?, t3.labelName.?, t3.color.?)
+    }.list
+      q.splitWith { (c1, c2) =>
+      c1._1.userName == c2._1.userName &&
+        c1._1.repositoryName == c2._1.repositoryName &&
+        c1._1.issueId == c2._1.issueId
+    }.map { issues => issues.head match {
+      case (issue, _ , _ ,_) =>
+        (issue,
+          issues.flatMap { t => t._2.map (
+            Label(issue.userName, issue.repositoryName, _ , t._3.get, t._4.get)
+          )} toList
+          )
+    }} toList
+
+
+/*
+    issues.leftJoin (IssueLabelDAO.issueLabels) .on { case (t1, t2) => t1.userName === t2.userName}
+      .leftJoin (LabelDAO.labels)      .on { case ((t1, t2), t3) => t2.userName === t3.userName}
+      .map { case ((t1, t2), t3) =>(t1, t3.labelId.?, t3.labelName.?, t3.color.?)}
+      .sortBy(_._3)	// labelName
+      .sortBy { case (t1, _, _, _) =>
+      (condition.sort match {
+        case "created"  => t1.registeredDate
+        case "updated"  => t1.updatedDate
+      }) match {
+        case sort => condition.direction match {
+          case "asc"  => sort asc
+          case "desc" => sort desc
+        }
+      }
     }
-    q.list()
+    */
+
+
+
     /*
     val q = for { i <- issues
                   if (i.closed === (condition.state == "closed")) &&
@@ -72,6 +118,11 @@ object IssueDAO {
     val issueId =
       (issues returning issues.map(_.issueId)) += issue
     issueId.get
+  }
+
+  def updateAssigne(issueId: Int, assignedUserName: String)(implicit s: Session) {
+    val q = for { i <- issues if i.issueId === issueId} yield i.assignedUserName
+    q.update(assignedUserName)
   }
 
   def setColseState(issueId: Int, closed: Boolean)(implicit s: Session) {

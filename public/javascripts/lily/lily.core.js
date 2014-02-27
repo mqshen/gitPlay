@@ -90,6 +90,9 @@
             e.stopPropagation();
             e.preventDefault()
         })
+        $(document).on("click", ".dropdown-toggle .js-menu-target", function() {
+            return $(".dropdown-toggle .js-menu-content").html($(".js-new-dropdown-contents").html())
+        })
 	})
 
 })(jQuery );

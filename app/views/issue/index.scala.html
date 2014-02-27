@@ -1,4 +1,4 @@
-@(baseUrl: String, currentUrl: String, repositoryInfo: RepositoryService.RepositoryInfo, issues: List[Issue], labels: List[Label], selectIndex: Int, user: Option[User] = None, currentLabels: String = "", condition: IssuesService.IssueSearchCondition)
+@(baseUrl: String, currentUrl: String, repositoryInfo: RepositoryService.RepositoryInfo, issues: List[(Issue, List[Label])], labels: List[Label], selectIndex: Int, user: Option[User] = None, currentLabels: String = "", condition: IssuesService.IssueSearchCondition)
 @import helper._
 @views.html.helper.main(baseUrl, repositoryInfo, user, true, 1){
 <div class="tabnav tabnav-issues">
@@ -432,8 +432,11 @@
                         <label class="select-all">
                             <input type="checkbox" class="js-issues-list-select-all">
                         </label>
-
-                        <a href="#" class="button minibutton js-issues-list-close js-mass-assign-button disabled" data-hotkey="e" data-url="/mqshen/gitPlay/issues/close">Close</a>
+                        @if(condition.state == "open") {
+                            <a href="#" class="button minibutton js-issues-list-close js-mass-assign-button disabled" data-hotkey="e" data-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/close">Close</a>
+                        } else {
+                            <a href="#" class="button minibutton js-issues-list-close js-mass-assign-button disabled" data-hotkey="e" data-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/reopen">Reopen</a>
+                        }
 
                         <div class="select-menu label-select-menu js-issue-list-label-select-menu js-issue-mass-assign js-menu-container js-select-menu" data-multiple="">
 
@@ -686,7 +689,7 @@
                         </div> <!-- /.select-menu -->
                         </div>
                     </li>
-                    @issues.zipWithIndex.map { case (issue, i) =>
+                    @issues.zipWithIndex.map { case ((issue, currentLabels), i) =>
                     <li id="issue_26959" class="list-group-item issue-list-item js-list-browser-item js-navigation-item read selectable">
                         <div class="issue-item-unread"></div>
                         <input type="checkbox" class="list-group-item-check js-issues-list-checkbox select-toggle-check" name="issues[]" value="@issue.issueId">
@@ -697,6 +700,11 @@
                                 <span class="type-icon octicon octicon-issue-opened open" title="Open issue"></span>
                             }
                             <a href="/@repositoryInfo.owner/@repositoryInfo.name/issues/@issue.issueId" class="js-navigation-open">@issue.title</a>
+                            <span class="labels">
+                                @currentLabels.map { label =>
+                                    <span class="label labelstyle-@label.color lighter" data-name="@label.labelName">@label.labelName</span>
+                                }
+                            </span>
                         </h4>
                         <ul class="list-group-item-meta">
                             <li>

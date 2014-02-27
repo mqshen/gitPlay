@@ -10,7 +10,7 @@ import play.api.db.slick.Config.driver.simple._
 case class Label(
   var userName: String,
   var repositoryName: String,
-  labelId: Option[Int],
+  labelId: Int,
   var labelName: String,
   var color: String){
 
@@ -27,13 +27,14 @@ case class Label(
   }
 }
 
-class LabelTable(tag: Tag) extends Table[Label](tag, "LABEL") with LabelTemplate {
+class LabelTable(tag: Tag) extends Table[Label](tag, "LABEL") {
+  def userName = column[String]("USER_NAME")
+  def repositoryName = column[String]("REPOSITORY_NAME")
+  def labelId = column[Int]("LABEL_ID", O.PrimaryKey, O.AutoInc)
   def labelName = column[String]("LABEL_NAME")
   def color = column[String]("COLOR")
   def * = (userName , repositoryName , labelId , labelName , color) <> (Label.tupled, Label.unapply _)
 
-  def byPrimaryKey(owner: String, repository: String, labelId: Int) = byLabel(owner, repository, labelId)
-  def byPrimaryKey(userName: Column[String], repositoryName: Column[String], labelId: Column[Int]) = byLabel(userName, repositoryName, labelId)
 }
 
 object LabelDAO {

@@ -11,15 +11,15 @@ case class IssueLabel(
 userName: String,
 repositoryName: String,
 issueId: Int,
-labelId: Int)
+labelName: String)
 
 class IssueLabelTable(tag: Tag) extends Table[IssueLabel](tag, "ISSUE_LABEL") {
   def userName = column[String]("USER_NAME")
   def repositoryName = column[String]("REPOSITORY_NAME")
   def issueId = column[Int]("ISSUE_ID")
-  def labelId = column[Int]("LABEL_ID")
+  def labelName = column[String]("LABEL_ID")
 
-  def * = (userName , repositoryName , issueId , labelId) <> (IssueLabel.tupled, IssueLabel.unapply _)
+  def * = (userName , repositoryName , issueId , labelName) <> (IssueLabel.tupled, IssueLabel.unapply _)
 }
 
 object IssueLabelDAO {
@@ -27,6 +27,22 @@ object IssueLabelDAO {
 
   def create(issueLabel: IssueLabel)(implicit s: Session) {
     issueLabels.insert(issueLabel)
-
   }
+
+  def getIssueLabels(userName: String, repositoryName: String, issueId: Int)(implicit s: Session) : List[IssueLabel] = {
+    issueLabels.where(_.userName === userName)
+      .where(_.repositoryName === repositoryName)
+      .where(_.issueId === issueId).list()
+  }
+
+  def delete(issueLabel: IssueLabel)(implicit s: Session) {
+    issueLabels.where(_.userName === issueLabel.userName)
+      .where(_.repositoryName === issueLabel.repositoryName)
+      .where(_.issueId === issueLabel.issueId)
+      .where(_.labelName === issueLabel.labelName).delete
+  }
+
+//  def add(assignment: (Int, String))(implicit s: Session) {
+//    issueLabels.update()
+//  }
 }

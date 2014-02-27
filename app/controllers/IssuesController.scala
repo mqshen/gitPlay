@@ -12,10 +12,6 @@ import play.api.Play.current
 import models._
 import services.RepositoryService
 import java.sql.Date
-import util.Directory._
-import scala.Some
-import util.JGitUtil
-import scala.Some
 import models.Issue
 import services.IssuesService.IssueSearchCondition
 
@@ -51,7 +47,7 @@ object IssuesController extends Controller with RepositoryService with Secured {
     }
   }
 
-  case class IssueForm(title: String, body: Option[String], milestoneId: Option[Int], assignedUserName: Option[String], labels: List[Int])
+  case class IssueForm(title: String, body: Option[String], milestoneId: Option[Int], assignedUserName: Option[String], labels: List[String])
 
   val createForm: Form[IssueForm] = Form(
 
@@ -60,7 +56,7 @@ object IssuesController extends Controller with RepositoryService with Secured {
       "body" -> optional(text(minLength = 6)),
       "milestoneId" -> optional(number),
       "assignedUserName" -> optional(text(minLength = 3)),
-      "labels" -> list(number)
+      "labels" -> list(text)
     )
     {
       // Binding: Create a User from the mapping result (ignore the second password and the accept field)
@@ -98,8 +94,8 @@ object IssuesController extends Controller with RepositoryService with Secured {
                 issue.assignedUserName, issue.title, issue.body, false, currentDate, currentDate, false
               )
               val issueId = IssueDAO.create(newIssue)
-              issue.labels.foreach { labelId =>
-                val issueLabel = new IssueLabel(userName, repositoryName, issueId, labelId)
+              issue.labels.foreach { labelName =>
+                val issueLabel = new IssueLabel(userName, repositoryName, issueId, labelName)
                 IssueLabelDAO.create(issueLabel)
               }
               Redirect("/")
@@ -115,11 +111,44 @@ object IssuesController extends Controller with RepositoryService with Secured {
       getRepository(userName, repositoryName).map { repositoryInfo =>
         IssueDAO.getById(issueId).map { issue =>
           val comments = IssueCommentDAO.get(userName, repositoryName, issue.issueId)
-          Ok(views.html.issue.detail(getBaseUrl(request), request.uri, repositoryInfo, issue, comments, 0, getSessionUser(request)))
+          val labels = LabelDAO.getLabels(userName, repositoryName)
+          val currentLabels = IssueLabelDAO.getIssueLabels(userName, repositoryName, issue.issueId.get)
+          var collaborators = CollaboratorDAO.get(userName, repositoryName)
+          Ok(views.html.issue.detail(getBaseUrl(request), request.uri, repositoryInfo, collaborators :+ userName, issue, comments, currentLabels, labels, 0, getSessionUser(request)))
         }.getOrElse(NotFound)
       }.getOrElse(NotFound)
     }
   }
+
+  val modifyForm: Form[Option[String]] = Form(
+    mapping(
+      "assignedUserName" -> optional(text(minLength = 3))
+    )
+    {
+      (assignedUserName) => assignedUserName
+    }
+    {
+      // Unbinding: Create the mapping values from an existing User value
+      assignedUserName => Some(assignedUserName)
+    }
+  )
+
+  def doModify(userName: String, repositoryName: String, issueId: Int) = Action { implicit request =>
+    DB.withSession{ implicit session =>
+      getRepository(userName, repositoryName).map { repositoryInfo =>
+        modifyForm.bindFromRequest.fold(
+          errors => {
+            BadRequest
+          },
+          assignedUserName => {
+            IssueDAO.updateAssigne(issueId, assignedUserName.getOrElse(""))
+            Ok
+          }
+        )
+      }.getOrElse(NotFound)
+    }
+  }
+
   /*
       getRepository(userName, repositoryName).map { repositoryInfo =>
         createForm.bindFromRequest.fold(

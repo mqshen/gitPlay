@@ -1,7 +1,52 @@
-@(baseUrl: String, currentUrl: String, repositoryInfo: RepositoryService.RepositoryInfo, issue: Issue, comments: List[IssueComment], selectIndex: Int, user: Option[User] = None, labels: String = "")
+@(baseUrl: String, currentUrl: String, repositoryInfo: RepositoryService.RepositoryInfo, collaborators: List[String], issue: Issue, comments: List[IssueComment],currentLabels: List[IssueLabel], labels: List[Label], selectIndex: Int, user: Option[User] = None)
 @import helper._
 @views.html.helper.main(baseUrl, repositoryInfo, user, false, 1){
 <div id="issues_next">
+<style type="text/css" media="screen">
+    span.labelstyle-e11d21, .linked-labelstyle-e11d21 {  background-color: #e11d21 !important;  color: #fff !important;}.labelstyle-e11d21.selected {  background-color: #e11d21 !important;  color: #fff !important;}.label-select-menu .labelstyle-e11d21.selected {  background:rgba(225, 29, 33, 0.12) !important;  color: #991316 !important;}
+
+    span.labelstyle-eb6420, .linked-labelstyle-eb6420 {  background-color: #eb6420 !important;  color: #fff !important;}.labelstyle-eb6420.selected {  background-color: #eb6420 !important;  color: #fff !important;}.label-select-menu .labelstyle-eb6420.selected {  background:rgba(235, 100, 32, 0.12) !important;  color: #994114 !important;}
+
+    span.labelstyle-fbca04, .linked-labelstyle-fbca04 {  background-color: #fbca04 !important;  color: #332900 !important;}.labelstyle-fbca04.selected {  background-color: #fbca04 !important;  color: #332900 !important;}.label-select-menu .labelstyle-fbca04.selected {  background:rgba(251, 202, 4, 0.12) !important;  color: #997b02 !important;}
+
+    span.labelstyle-009800, .linked-labelstyle-009800 {  background-color: #009800 !important;  color: #fff !important;}.labelstyle-009800.selected {  background-color: #009800 !important;  color: #fff !important;}.label-select-menu .labelstyle-009800.selected {  background:rgba(0, 152, 0, 0.12) !important;  color: #009900 !important;}
+
+    span.labelstyle-006b75, .linked-labelstyle-006b75 {  background-color: #006b75 !important;  color: #fff !important;}.labelstyle-006b75.selected {  background-color: #006b75 !important;  color: #fff !important;}.label-select-menu .labelstyle-006b75.selected {  background:rgba(0, 107, 117, 0.12) !important;  color: #008b99 !important;}
+
+    span.labelstyle-207de5, .linked-labelstyle-207de5 {  background-color: #207de5 !important;  color: #fff !important;}.labelstyle-207de5.selected {  background-color: #207de5 !important;  color: #fff !important;}.label-select-menu .labelstyle-207de5.selected {  background:rgba(32, 125, 229, 0.12) !important;  color: #155399 !important;}
+
+    span.labelstyle-0052cc, .linked-labelstyle-0052cc {  background-color: #0052cc !important;  color: #fff !important;}.labelstyle-0052cc.selected {  background-color: #0052cc !important;  color: #fff !important;}.label-select-menu .labelstyle-0052cc.selected {  background:rgba(0, 82, 204, 0.12) !important;  color: #003d99 !important;}
+
+    span.labelstyle-5319e7, .linked-labelstyle-5319e7 {  background-color: #5319e7 !important;  color: #fff !important;}.labelstyle-5319e7.selected {  background-color: #5319e7 !important;  color: #fff !important;}.label-select-menu .labelstyle-5319e7.selected {  background:rgba(83, 25, 231, 0.12) !important;  color: #361099 !important;}
+
+    span.labelstyle-f7c6c7, .linked-labelstyle-f7c6c7 {  background-color: #f7c6c7 !important;  color: #332829 !important;}.labelstyle-f7c6c7.selected {  background-color: #f7c6c7 !important;  color: #332829 !important;}.label-select-menu .labelstyle-f7c6c7.selected {  background:rgba(247, 198, 199, 0.12) !important;  color: #997a7b !important;}
+
+    span.labelstyle-fad8c7, .linked-labelstyle-fad8c7 {  background-color: #fad8c7 !important;  color: #332c28 !important;}.labelstyle-fad8c7.selected {  background-color: #fad8c7 !important;  color: #332c28 !important;}.label-select-menu .labelstyle-fad8c7.selected {  background:rgba(250, 216, 199, 0.12) !important;  color: #988479 !important;}
+
+    span.labelstyle-fef2c0, .linked-labelstyle-fef2c0 {  background-color: #fef2c0 !important;  color: #333026 !important;}.labelstyle-fef2c0.selected {  background-color: #fef2c0 !important;  color: #333026 !important;}.label-select-menu .labelstyle-fef2c0.selected {  background:rgba(254, 242, 192, 0.12) !important;  color: #989173 !important;}
+
+    span.labelstyle-bfe5bf, .linked-labelstyle-bfe5bf {  background-color: #bfe5bf !important;  color: #2a332a !important;}.labelstyle-bfe5bf.selected {  background-color: #bfe5bf !important;  color: #2a332a !important;}.label-select-menu .labelstyle-bfe5bf.selected {  background:rgba(191, 229, 191, 0.12) !important;  color: #7f997f !important;}
+
+    span.labelstyle-bfdadc, .linked-labelstyle-bfdadc {  background-color: #bfdadc !important;  color: #2c3233 !important;}.labelstyle-bfdadc.selected {  background-color: #bfdadc !important;  color: #2c3233 !important;}.label-select-menu .labelstyle-bfdadc.selected {  background:rgba(191, 218, 220, 0.12) !important;  color: #849799 !important;}
+
+    span.labelstyle-c7def8, .linked-labelstyle-c7def8 {  background-color: #c7def8 !important;  color: #282d33 !important;}.labelstyle-c7def8.selected {  background-color: #c7def8 !important;  color: #282d33 !important;}.label-select-menu .labelstyle-c7def8.selected {  background:rgba(199, 222, 248, 0.12) !important;  color: #7a8898 !important;}
+
+    span.labelstyle-bfd4f2, .linked-labelstyle-bfd4f2 {  background-color: #bfd4f2 !important;  color: #282c33 !important;}.labelstyle-bfd4f2.selected {  background-color: #bfd4f2 !important;  color: #282c33 !important;}.label-select-menu .labelstyle-bfd4f2.selected {  background:rgba(191, 212, 242, 0.12) !important;  color: #788699 !important;}
+
+    span.labelstyle-d4c5f9, .linked-labelstyle-d4c5f9 {  background-color: #d4c5f9 !important;  color: #2b2833 !important;}.labelstyle-d4c5f9.selected {  background-color: #d4c5f9 !important;  color: #2b2833 !important;}.label-select-menu .labelstyle-d4c5f9.selected {  background:rgba(212, 197, 249, 0.12) !important;  color: #827999 !important;}
+
+    span.labelstyle-fc2929, .linked-labelstyle-fc2929 {  background-color: #fc2929 !important;  color: #fff !important;}.labelstyle-fc2929.selected {  background-color: #fc2929 !important;  color: #fff !important;}.label-select-menu .labelstyle-fc2929.selected {  background:rgba(252, 41, 41, 0.12) !important;  color: #991818 !important;}
+
+    span.labelstyle-cccccc, .linked-labelstyle-cccccc {  background-color: #cccccc !important;  color: #333333 !important;}.labelstyle-cccccc.selected {  background-color: #cccccc !important;  color: #333333 !important;}.label-select-menu .labelstyle-cccccc.selected {  background:rgba(204, 204, 204, 0.12) !important;  color: #999999 !important;}
+
+    span.labelstyle-84b6eb, .linked-labelstyle-84b6eb {  background-color: #84b6eb !important;  color: #1c2733 !important;}.labelstyle-84b6eb.selected {  background-color: #84b6eb !important;  color: #1c2733 !important;}.label-select-menu .labelstyle-84b6eb.selected {  background:rgba(132, 182, 235, 0.12) !important;  color: #557699 !important;}
+
+    span.labelstyle-e6e6e6, .linked-labelstyle-e6e6e6 {  background-color: #e6e6e6 !important;  color: #333333 !important;}.labelstyle-e6e6e6.selected {  background-color: #e6e6e6 !important;  color: #333333 !important;}.label-select-menu .labelstyle-e6e6e6.selected {  background:rgba(230, 230, 230, 0.12) !important;  color: #999999 !important;}
+
+    span.labelstyle-cc317c, .linked-labelstyle-cc317c {  background-color: #cc317c !important;  color: #fff !important;}.labelstyle-cc317c.selected {  background-color: #cc317c !important;  color: #fff !important;}.label-select-menu .labelstyle-cc317c.selected {  background:rgba(204, 49, 124, 0.12) !important;  color: #99245c !important;}
+
+    span.labelstyle-ffffff, .linked-labelstyle-ffffff {  background-color: #ffffff !important;  color: #333333 !important;}.labelstyle-ffffff.selected {  background-color: #ffffff !important;  color: #333333 !important;}.label-select-menu .labelstyle-ffffff.selected {  background:rgba(255, 255, 255, 0.12) !important;  color: #999999 !important;}
+</style>
     <div id="show_issue" class="js-issues-results">
         <div id="js-discussion-header" class="gh-header js-details-container js-socket-channel js-updatable-content js-issue-header issue"
              data-channel="@repositoryInfo.owner/@repositoryInfo.name:issue:27571573"
@@ -44,17 +89,91 @@
         </div>
         <div id="discussion_bucket" class="tab-content">
             <div class="discussion-sidebar">
-                <div id="js-discussion-stats" class="discussion-stats js-socket-channel js-updatable-content" data-channel="@repositoryInfo.owner/@repositoryInfo.name:issue:27571573" data-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=discussion_stats">
+                <div id="js-discussion-stats" class="discussion-stats js-socket-channel js-updatable-content"
+                     data-channel="@repositoryInfo.owner/@repositoryInfo.name:issue:27571573"
+                     data-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=discussion_stats">
                 </div>
                 <div class="discussion-sidebar-item sidebar-labels">
-                    <h3 class="discussion-sidebar-heading">
-                        Labels
-                    </h3>
-                    <div class="labels css-truncate js-timeline-label-list"></div>
+                    <div class="select-menu label-select-menu js-issue-show-label-select-menu js-menu-container js-select-menu" 
+                         data-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/labels/modify_assignment" data-multiple="">
+                        <span class="button-link icon-only select-menu-button js-menu-target">
+                            <span class="octicon octicon-gear"></span>
+                        </span>
+
+                        <form accept-charset="UTF-8" action="/@repositoryInfo.owner/@repositoryInfo.name/issues/labels/modify_assignment" method="post">
+                            <div style="margin:0;padding:0;display:inline">
+                                <input name="_method" type="hidden" value="put">
+                                <input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk=">
+                            </div>
+                            <div class="select-menu-modal-holder js-menu-content js-navigation-container" aria-hidden="true">
+                                <div class="select-menu-modal">
+                                    <div class="select-menu-header">
+                                        <span class="select-menu-title">Apply labels to this issue</span>
+                                        <span class="octicon octicon-remove-close js-menu-close"></span>
+                                    </div> <!-- /.select-menu-header -->
+
+                                    <div class="select-menu-error-shell">
+                                        <span class="select-menu-error js-select-menu-error">Whoops, there was an error</span>
+                                    </div>
+
+                                    <div class="select-menu-filters">
+                                        <div class="select-menu-text-filter">
+                                            <input type="text" id="label-filter-field" class="js-filterable-field js-navigation-enable" placeholder="Filter labels" autocomplete="off">
+                                        </div>
+                                    </div> <!-- /.select-menu-filters -->
+
+                                    <div class="select-menu-list" data-filterable-for="label-filter-field" data-filterable-type="substring">
+                                        @labels.map { label =>
+                                            @if(currentLabels.iterator.filter(_.labelName == label.labelName).size == 0) {
+                                        <div class="select-menu-item js-navigation-item labelstyle-@label.color ">
+                                            <span class="select-menu-item-icon octicon octicon-check"></span>
+                                            <div class="select-menu-item-text">
+                                                <div class="color-label-wrapper">
+                                                    <div data-name="@label.labelName" class="color-label labelstyle-@label.color">
+                                                        <input style="display: none" type="checkbox" value="@label.labelName" name="labels[]">
+                                                        <span class="color" style="background-color: #@label.color"></span>
+                                                        <span class="name">@label.labelName</span>
+                                                        <span class="octicon octicon-remove-close"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> <!-- /.select-menu-item -->
+                                            } else {
+                                        <div class="select-menu-item js-navigation-item labelstyle-@label.color selected">
+                                            <span class="select-menu-item-icon octicon octicon-check"></span>
+                                            <div class="select-menu-item-text">
+                                                <div class="color-label-wrapper">
+                                                    <div data-name="@label.labelName" class="color-label labelstyle-@label.color">
+                                                        <input style="display: none" type="checkbox" value="@label.labelName" name="labels[]" checked="true">
+                                                        <span class="color" style="background-color: #@label.color"></span>
+                                                        <span class="name">@label.labelName</span>
+                                                        <span class="octicon octicon-remove-close"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> <!-- /.select-menu-item -->
+                                            }
+                                        }
+
+
+                                    </div> <!-- /.select-menu-list -->
+
+                                    <div class="select-menu-no-results js-not-filterable">Nothing to show</div>
+
+
+                                    <div class="select-menu-loading-overlay">Loading…</div>
+                                </div> <!-- /.select-menu-modal -->
+                            </div> <!-- /.select-menu-modal-holder -->
+
+                            <input type="hidden" class="js-issue-number" name="issueId" value="@issue.issueId">
+                        </form>
+                    </div>
+                    <h3 class="discussion-sidebar-heading">Labels</h3>
+                    <div class="labels css-truncate js-timeline-label-list">@currentLabels.map {currentLabel =>@labels.iterator.filter( _.labelName == currentLabel.labelName).map { label =><span class="label css-truncate-target labelstyle-@label.color" title="@label.labelName">@label.labelName</span>}}</div>
                 </div>
                 <div class="discussion-sidebar-item sidebar-milestone">
-                    <div class="select-menu js-menu-container js-select-menu js-milestone-picker is-showing-clear-item is-loading" data-contents-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=milestone_select_menu">
-
+                    <div class="select-menu js-menu-container js-select-menu js-milestone-picker is-showing-clear-item is-loading"
+                         data-contents-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=milestone_select_menu">
                         <h3 class="discussion-sidebar-heading">
                             Milestone
                         </h3>
@@ -64,24 +183,87 @@
                     </span>
                 </div>
                 <div class="discussion-sidebar-item sidebar-assignee">
-                    <div class="select-menu js-menu-container js-select-menu js-assignee-picker js-assignee-picker-next  is-loading" data-contents-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=assignee_select_menu">
-
+                    <div class="select-menu js-menu-container js-select-menu js-assignee-picker js-assignee-picker-next @if(issue.assignedUserName.isDefined) {is-showing-clear-item }" data-contents-url="/@repositoryInfo.owner/@repositoryInfo.name/issues/345/show_partial?partial=assignee_select_menu">
+                        <span class="button-link icon-only select-menu-button js-menu-target" role="button" aria-label="Assign someone to this issue" aria-haspopup="true">
+                            <span class="octicon octicon-gear"></span>
+                        </span>
                         <h3 class="discussion-sidebar-heading">
                             Assignee
                         </h3>
+                        <div class="select-menu-modal-holder js-menu-content js-navigation-container js-active-navigation-container" aria-hidden="false">
+                            <div class="select-menu-modal">
+                                <div class="select-menu-header">
+                                    <span class="select-menu-title">Assign someone to this issue</span>
+                                    <span class="octicon octicon-remove-close js-menu-close"></span>
+                                </div> <!-- /.select-menu-header -->
+
+                                <div class="select-menu-error-shell">
+                                    <span class="select-menu-error js-select-menu-error">Whoops, there was an error</span>
+                                </div>
+                                <div class="select-menu-error-shell"><span class="select-menu-error js-select-menu-error">Sorry, an error occurred</span></div>
+
+                                <div class="select-menu-filters">
+                                    <div class="select-menu-text-filter">
+                                        <input type="text" id="assignee-filter-field" class="js-filterable-field js-navigation-enable" placeholder="Filter people" aria-label="Type or choose a name">
+                                    </div>
+                                </div> <!-- /.select-menu-filters -->
+
+                                <form accept-charset="UTF-8" action="/@repositoryInfo.owner/@repositoryInfo.name/issues/@issue.issueId" class="edit_issue" id="edit_assignee_28307954" method="post"><div style="margin:0;padding:0;display:inline"><input name="_method" type="hidden" value="put"><input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk="></div>
+
+                                    <div class="select-menu-list">
+
+                                        <div class="select-menu-clear-item select-menu-item js-navigation-item js-clear-assignee js-no-current-assignee navigation-focus" role="button" aria-label="Clear assignee">
+                                            <input name="assignedUserName" type="radio" value="">
+                                            <span class="select-menu-item-icon octicon octicon-remove-close"></span>
+                                            <div class="select-menu-item-text">Clear assignee</div>
+                                        </div> <!-- /.select-menu-item -->
+
+                                        <div data-filterable-for="assignee-filter-field" data-filterable-type="fuzzy" role="menu">
+                                            @collaborators.map {collaborator =>
+                                            <div class="select-menu-item js-navigation-item last-visible @if(collaborator == issue.assignedUserName.getOrElse("")) {selected }" role="menuitem">
+                                                <input name="assignedUserName" type="radio" value="@collaborator" @if(collaborator == issue.assignedUserName.getOrElse("")) { checked="checked" } >
+                                                <span class="select-menu-item-icon octicon octicon-check"></span>
+
+                                                <div class="select-menu-item-gravatar js-select-menu-item-gravatar">
+                                                    <span class="avatar"><img alt="miaoqi shen" class=" js-avatar" data-user="687580" height="20" src="https://avatars.githubusercontent.com/u/687580" width="20"></span>
+                                                </div>
+
+                                                <div class="select-menu-item-text">
+                                                    <h4>@collaborator<span class="description"></span></h4>
+                                                </div>
+                                            </div>
+                                            }
+
+                                        </div>
+
+                                        <div class="select-menu-no-results">Nothing to show</div>
+
+                                    </div> <!-- /.select-menu-list -->
+
+
+                                </form>
+                                <div class="select-menu-loading-overlay">Loading…</div>
+                            </div> <!-- /.select-menu-modal -->
+                        </div>
 
                     </div> <!-- /.select-menu -->
-
+                    @if(issue.assignedUserName.isDefined && !issue.assignedUserName.get.isEmpty) {
+                    <p class="css-truncate js-assignee-infobar-item-wrapper">
+                        <span class="avatar"><img alt="miaoqi shen" class=" js-avatar" data-user="687580" height="20" src="https://avatars.githubusercontent.com/u/687580" width="20"></span>
+                        <a href="/@issue.assignedUserName.get" class="assignee css-truncate-target">@issue.assignedUserName.get</a>
+                    </p>
+                    } else {
                     <p class="css-truncate js-assignee-infobar-item-wrapper">
                         <span class="text-muted">No one assigned</span>
                     </p>
+                    }
                 </div>
 
 
                 <div class="discussion-sidebar-item sidebar-notifications">
                     <h3 class="discussion-sidebar-heading">Notifications</h3>
                     <div class="thread-subscription-status js-thread-subscription-status js-socket-channel js-updatable-content"
-                         data-channel="@repositoryInfo.owner/@repositoryInfo.name:thread-subscription:27571573:mqshen"
+                         data-channel="@repositoryInfo.owner/@repositoryInfo.name:thread-subscription:27571573:@repositoryInfo.owner"
                          data-url="/notifications/thread_subscription?repository_id=1062237&amp;thread_class=Issue&amp;thread_id=27571573">
 
                         <span class="mega-octicon octicon-radio-tower"></span>
@@ -243,7 +425,7 @@
 
 
                     <div class="timeline-comment-wrapper timeline-new-comment js-comment-container">
-                        <a href="/mqshen"><img alt="miaoqi shen" class="timeline-comment-avatar js-avatar" data-user="687580" height="48" src="https://0.gravatar.com/avatar/574f047760ff87f6aefebdfa40eeb07a?d=https%3A%2F%2Fidenticons.github.com%2Ffdeed6355bac156322c8b90d9e90400b.png&amp;r=x&amp;s=140" width="48"></a>
+                        <a href="/@repositoryInfo.owner"><img alt="miaoqi shen" class="timeline-comment-avatar js-avatar" data-user="687580" height="48" src="https://0.gravatar.com/avatar/574f047760ff87f6aefebdfa40eeb07a?d=https%3A%2F%2Fidenticons.github.com%2Ffdeed6355bac156322c8b90d9e90400b.png&amp;r=x&amp;s=140" width="48"></a>
 
                         <form accept-charset="UTF-8" action="/@repositoryInfo.owner/@repositoryInfo.name/issue_comments" class="js-new-comment-form" data-remote="true" data-type="json" method="post"><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="yqV6qFy1mJP+lu4l+hKEW6l8I+Q9cd4wEfig1YS1hWk="></div>
                             <div class="timeline-comment">

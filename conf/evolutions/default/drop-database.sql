@@ -7,6 +7,8 @@ drop table `COMMIT_LOG`
 
 drop table `ACTIVITY`
 
+drop table `COLLABORATOR`
+
 drop table `LABEL`
 
 drop table `REPOSITORY`

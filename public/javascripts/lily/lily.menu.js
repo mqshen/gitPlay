@@ -114,6 +114,20 @@
                 $btn = $btn.closest('.js-editable-label');
             $btn.menu('toggle')
         })
+        $(document).on("click", ".js-menu-container", function(e) {
+            var $btn = $(e.target);
+            if (!$btn.hasClass('js-menu-container'))
+                $btn = $btn.closest('.js-menu-container');
+            $btn.menu('toggle')
+        })
+        $(document).on("click", ".js-navigation-item", function(e) {
+            var $btn = $(e.target);
+            if (!$btn.hasClass('js-navigation-item'))
+                $btn = $btn.closest('.js-navigation-item');
+            var checkBox = $btn.find('input')
+            checkBox.attr("checked") ? checkBox.attr("checked", false) : checkBox.attr("checked", true)
+            $btn.toggleClass("selected")
+        })
 	})
 
 })(jQuery );

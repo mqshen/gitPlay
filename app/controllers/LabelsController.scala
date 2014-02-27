@@ -30,7 +30,7 @@ object LabelsController extends Controller with RepositoryService with Secured {
     {
       // Binding: Create a User from the mapping result (ignore the second password and the accept field)
       (name, color) => {
-        Label("", "", None, name, color)
+        Label("", "", 0, name, color)
       }
     }
     {
@@ -49,7 +49,8 @@ object LabelsController extends Controller with RepositoryService with Secured {
               val issues = IssueDAO.getIssueAll(userName, repositoryName)
               val labels = LabelDAO.getLabels(userName, repositoryName)
               val condition = IssueSearchCondition(request)
-              Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request), "", condition))
+              //Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request), "", condition))
+              Ok
             },
             label => {
               label.userName = userName
@@ -74,7 +75,8 @@ object LabelsController extends Controller with RepositoryService with Secured {
               val issues = IssueDAO.getIssueAll(userName, repositoryName)
               val labels = LabelDAO.getLabels(userName, repositoryName)
               val condition = IssueSearchCondition(request)
-              Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request), "", condition))
+              //Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request), "", condition))
+              Ok
             },
             label => {
               LabelDAO.update(userName, repositoryName, labelName, label)
@@ -94,6 +96,62 @@ object LabelsController extends Controller with RepositoryService with Secured {
         getRepository(userName, repositoryName).map { repositoryInfo =>
           LabelDAO.delete(userName, repositoryName, labelName)
           Ok
+        }.getOrElse(NotFound)
+      }
+    }.getOrElse(NotFound)
+  }
+
+  val assignmentForm: Form[(Int, String)] = Form(
+
+    mapping(
+      "issueId" -> number,
+      "labelName" -> text
+    )
+    {
+      // Binding: Create a User from the mapping result (ignore the second password and the accept field)
+      (issueId, labelName) => {
+        (issueId, labelName)
+      }
+    }
+    {
+      // Unbinding: Create the mapping values from an existing User value
+      label => Some(label._1, label._2)
+    }
+  )
+
+  def assignment(userName: String, repositoryName: String) = Action { implicit request =>
+    getSessionUser(request).map { user =>
+      DB.withSession{ implicit session =>
+        getRepository(userName, repositoryName).map { repositoryInfo =>
+          assignmentForm.bindFromRequest.fold(
+            errors => {
+              BadRequest
+            },
+            assignment => {
+              val issueLabel = new IssueLabel(userName, repositoryName, assignment._1, assignment._2)
+              IssueLabelDAO.create(issueLabel)
+              Ok
+            }
+          )
+        }.getOrElse(NotFound)
+      }
+    }.getOrElse(NotFound)
+  }
+
+  def deleteAssignment(userName: String, repositoryName: String) = Action { implicit request =>
+    getSessionUser(request).map { user =>
+      DB.withSession{ implicit session =>
+        getRepository(userName, repositoryName).map { repositoryInfo =>
+          assignmentForm.bindFromRequest.fold(
+            errors => {
+              BadRequest
+            },
+            assignment => {
+              val issueLabel = new IssueLabel(userName, repositoryName, assignment._1, assignment._2)
+              IssueLabelDAO.delete(issueLabel)
+              Ok
+            }
+          )
         }.getOrElse(NotFound)
       }
     }.getOrElse(NotFound)
