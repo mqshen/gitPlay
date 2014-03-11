@@ -1,4 +1,4 @@
-@(baseUrl: String, reversion: String, repositoryInfo: RepositoryService.RepositoryInfo, files: List[JGitUtil.FileInfo], readme: Option[String], lastCommit: JGitUtil.CommitInfo, user: Option[User] = None)
+@(baseUrl: String, currentPath: Option[String], reversion: String, repositoryInfo: RepositoryService.RepositoryInfo, files: List[JGitUtil.FileInfo], readme: Option[String], lastCommit: JGitUtil.CommitInfo, user: Option[User] = None)
 
 @import helper._
 @views.html.helper.main(baseUrl, repositoryInfo, user){
@@ -206,7 +206,7 @@
         </p>
         <div class="commit-meta">
             <span aria-label="Copy SHA" class="js-zeroclipboard zeroclipboard-link" data-clipboard-text="@lastCommit.id" data-copied-hint="copied!"><span class="octicon octicon-clippy"></span></span>
-            <a href="/@repositoryInfo.owner/@repositoryInfo.owner/commit/@lastCommit.id" class="sha-block" data-pjax="">latest commit <span class="sha">@lastCommit.sha</span></a>
+            <a href="/@repositoryInfo.owner/@repositoryInfo.name/commit/@lastCommit.id" class="sha-block" data-pjax="">latest commit <span class="sha">@lastCommit.sha</span></a>
 
             <div class="authorship">
                 <img alt="miaoqi shen" class="gravatar js-avatar" data-user="687580" height="20" src="https://2.gravatar.com/avatar/574f047760ff87f6aefebdfa40eeb07a?d=https%3A%2F%2Fidenticons.github.com%2Ffdeed6355bac156322c8b90d9e90400b.png&amp;r=x&amp;s=140" width="20">
@@ -234,12 +234,12 @@
                 <td class="content">
                     <span class="css-truncate css-truncate-target">
                     @if(file.isDirectory) {
-                        <a href="/@repositoryInfo.owner/@repositoryInfo.name/tree/master/@file.name"
+                        <a href="/@repositoryInfo.owner/@repositoryInfo.name/tree/master/@currentPath.map(_ + "/")@file.name"
                            class="js-directory-link"
                            id="s"
                            title="@file.name">@file.name</a>
                     } else {
-                        <a href="/@repositoryInfo.owner/@repositoryInfo.name/blob/master/@file.name"
+                        <a href="/@repositoryInfo.owner/@repositoryInfo.name/blob/master/@currentPath.map(_ + "/")@file.name"
                            class="js-directory-link"
                            id="s"
                            title="@file.name">@file.name</a>

@@ -84,7 +84,7 @@ object IssuesService {
 
   object IssueSearchCondition {
 
-    def apply(request: Request[AnyContent]): IssueSearchCondition =
+    def apply(request: Request[AnyContent], filterName: String , filterValue: String ): IssueSearchCondition = {
       new IssueSearchCondition(
         request.getQueryString("labels").map(_.split(",").toSet).getOrElse(Set.empty),
         /*
@@ -99,7 +99,11 @@ object IssuesService {
         request.getQueryString("for"),
         request.getQueryString("state").getOrElse("open"),
         request.getQueryString("sort").getOrElse("created"),
-        request.getQueryString("direction").getOrElse("desc"))
+        request.getQueryString("direction").getOrElse("desc"),
+        if(filterName == "created_by") Some(filterValue) else None,
+        if(filterName == "assigned") Some(filterValue) else None
+      )
+    }
 
     def page(request: Request[AnyContent]) = try {
       val i = request.getQueryString("page").getOrElse("1").toInt

@@ -21,7 +21,7 @@ object IssuesController extends Controller with RepositoryService with Secured {
     DB.withSession{ implicit session =>
       getRepository(userName, repositoryName).map { repositoryInfo =>
         val labels = LabelDAO.getLabels(userName, repositoryName)
-        val condition = IssueSearchCondition(request)
+        val condition = IssueSearchCondition(request, "", "")
         val issues = IssueDAO.getIssue(userName, repositoryName, condition)
         Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request), "", condition))
       }.getOrElse(NotFound)
@@ -31,18 +31,11 @@ object IssuesController extends Controller with RepositoryService with Secured {
   def filter(userName: String, repositoryName: String, filterBy: String, filterValue: String, labels: Option[String]) = Action { implicit request =>
     DB.withSession{ implicit session =>
       getRepository(userName, repositoryName).map { repositoryInfo =>
-        val (conditions:Map[String, String], selectIndex) = filterBy match {
-          case "assigned" =>
-            (Map("ASSIGNED_USER_NAME" -> filterValue), 1)
-          case "created_by" =>
-            (Map("OPENED_USER_NAME" -> filterValue), 2)
-          case _ =>
-            (Map(), 3)
-        }
-        val condition = IssueSearchCondition(request)
+
+        val condition = IssueSearchCondition(request,filterBy , filterValue)
         val issues = IssueDAO.getIssue(userName, repositoryName, condition)
         val labels = LabelDAO.getLabels(userName, repositoryName)
-        Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, selectIndex, getSessionUser(request), "", condition))
+        Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 1, getSessionUser(request), "", condition))
       }.getOrElse(NotFound)
     }
   }

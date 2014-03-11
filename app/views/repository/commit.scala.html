@@ -1,6 +1,9 @@
 @(baseUrl: String, commitId: String, commitInfo: JGitUtil.CommitInfo, branches: List[String], tags: List[String], repositoryInfo: RepositoryService.RepositoryInfo, diffs: Seq[JGitUtil.DiffInfo], oldCommitId: Option[String], user: Option[User] = None)
 @import helper._
 @views.html.helper.main(baseUrl, repositoryInfo, user, false){
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/diffview.css")">
+<script  src="@routes.Assets.at("javascripts/diffview.js")" type="text/javascript"></script>
+<script  src="@routes.Assets.at("javascripts/difflib.js")" type="text/javascript"></script>
 <div class="commit full-commit ">
     <a href="/@repositoryInfo.owner/@repositoryInfo.name/tree/@commitId" class="browse-button" title="Browse the code at this point in the history" rel="nofollow">Browse code</a>
     <p class="commit-title">
@@ -23,7 +26,9 @@
       </span>
       <div class="authorship">
           <img alt="miaoqi shen" class="gravatar js-avatar" data-user="687580" height="24" src="https://1.gravatar.com/avatar/574f047760ff87f6aefebdfa40eeb07a?d=https%3A%2F%2Fidenticons.github.com%2Ffdeed6355bac156322c8b90d9e90400b.png&amp;r=x&amp;s=140" width="24">
-          <span class="author-name"><a href="/@repositoryInfo.owner" rel="author">@repositoryInfo.owner</a></span>
+          <span class="author-name">
+              <a href="/@repositoryInfo.owner" rel="author">@repositoryInfo.owner</a>
+          </span>
           authored
           <time class="js-relative-date" data-title-format="YYYY-MM-DD HH:mm:ss" datetime="" title="2014-01-20 22:28:17">a month ago</time>
       </div>
@@ -99,10 +104,36 @@
                         }
                         </td>
                     </tr>
+
                 </tbody>
             </table>
         </div>
+        <div class="data highlight " id="diff-output-@i">
+        </div>
     </div>
+    <script>
+        $(function() {
+            var base = difflib.stringAsLines($("#oldText-@i").val()),
+		        newtxt = difflib.stringAsLines($("#newText-@i").val()),
+		        sm = new difflib.SequenceMatcher(base, newtxt),
+		        opcodes = sm.get_opcodes(),
+		        diffoutputdiv = $("#diff-output-@i"),
+		        contextSize = 90;
+
+	        diffoutputdiv.empty()
+
+	        diffoutputdiv.append(diffview.buildView({
+	        	baseTextLines: base,
+	        	newTextLines: newtxt,
+	        	opcodes: opcodes,
+	        	baseTextName: "Base Text",
+	        	newTextName: "New Text",
+	        	contextSize: contextSize,
+	        	viewType: 1
+	        }));
+
+        })
+    </script>
 
     }
 </div>

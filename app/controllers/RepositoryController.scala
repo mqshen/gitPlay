@@ -15,13 +15,15 @@ import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.{ObjectId, Constants, Ref}
 import scala.collection.JavaConverters._
 import org.eclipse.jgit.transport.{PacketLineOut, ReceivePack, RefAdvertiser}
-import java.io.{ByteArrayInputStream, OutputStream, File}
+import java.io._
 import org.eclipse.jgit.util.{HttpSupport, IO}
 import play.api.libs.iteratee.Enumerator
 import git.util.{GitPlayUploadPackFactory, GitPlayReceivePackFactory, SmartOutputStream}
 import org.eclipse.jgit.transport.RefAdvertiser.PacketLineOutRefAdvertiser
 import org.eclipse.jgit.treewalk.TreeWalk
 import org.eclipse.jgit.internal.storage.file.ObjectDirectory
+import scala.Some
+import models.Repository
 
 
 /**
@@ -165,7 +167,7 @@ object RepositoryController extends Controller with Secured with WikiService wit
             }
 
             val commit = new JGitUtil.CommitInfo(revCommit) // latest commit
-            Ok(views.html.repository.detail(baseUrl, reversion, repositoryInfo, files, readme, commit, getSessionUser(request)))
+            Ok(views.html.repository.detail(baseUrl, pathOpt, reversion, repositoryInfo, files, readme, commit, getSessionUser(request)))
           } getOrElse NotFound
 
         }
@@ -328,8 +330,14 @@ object RepositoryController extends Controller with Secured with WikiService wit
       val receivePack = receivePackFactory.create(rs, repository)
       receivePack.setBiDirectionalPipe(false)
 
-      val inputStream = new ByteArrayInputStream(rs.body.asRaw.get.asBytes().get)
-
+      val bytes = rs.body.asRaw.get.asBytes()
+      val inputStream =  if (bytes.isDefined) {
+        new ByteArrayInputStream(bytes.get)
+      }
+      else {
+        val file = rs.body.asRaw.get.asFile
+        new BufferedInputStream( new FileInputStream( file ) )
+      }
       val result = Ok
 
       import scala.concurrent.ExecutionContext.Implicits.global
@@ -344,7 +352,7 @@ object RepositoryController extends Controller with Secured with WikiService wit
         receivePack.receive(inputStream, buf, null)
         buf.close()
       }
-      result.stream(enumerator >>> Enumerator.eof).withHeaders(("Content-Type","application/x-git-receive-pack-result"))
+      result.chunked(enumerator >>> Enumerator.eof).withHeaders(("Content-Type","application/x-git-receive-pack-result"))
     }
   }
 

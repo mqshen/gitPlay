@@ -46,9 +46,6 @@ object LabelsController extends Controller with RepositoryService with Secured {
         getRepository(userName, repositoryName).map { repositoryInfo =>
           createForm.bindFromRequest.fold(
             errors => {
-              val issues = IssueDAO.getIssueAll(userName, repositoryName)
-              val labels = LabelDAO.getLabels(userName, repositoryName)
-              val condition = IssueSearchCondition(request)
               //Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request), "", condition))
               Ok
             },
@@ -72,9 +69,6 @@ object LabelsController extends Controller with RepositoryService with Secured {
         getRepository(userName, repositoryName).map { repositoryInfo =>
           createForm.bindFromRequest.fold(
             errors => {
-              val issues = IssueDAO.getIssueAll(userName, repositoryName)
-              val labels = LabelDAO.getLabels(userName, repositoryName)
-              val condition = IssueSearchCondition(request)
               //Ok(views.html.issue.index(getBaseUrl(request), request.uri, repositoryInfo, issues, labels, 0, getSessionUser(request), "", condition))
               Ok
             },
