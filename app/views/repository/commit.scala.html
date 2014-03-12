@@ -1,7 +1,6 @@
 @(baseUrl: String, commitId: String, commitInfo: JGitUtil.CommitInfo, branches: List[String], tags: List[String], repositoryInfo: RepositoryService.RepositoryInfo, diffs: Seq[JGitUtil.DiffInfo], oldCommitId: Option[String], user: Option[User] = None)
 @import helper._
 @views.html.helper.main(baseUrl, repositoryInfo, user, false){
-<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/diffview.css")">
 <script  src="@routes.Assets.at("javascripts/diffview.js")" type="text/javascript"></script>
 <script  src="@routes.Assets.at("javascripts/difflib.js")" type="text/javascript"></script>
 <div class="commit full-commit ">
