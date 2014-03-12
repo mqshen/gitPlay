@@ -1,9 +1,37 @@
-@(user: User, activies: List[Activity], repositories: List[Repository])
+@(user: User, activities: List[Activity], repositories: List[Repository])
 
 @main(user){
     <div id="dashboard">
         <div class="news">
+            @activities.map { activity =>
+            <div class="alert issues_comment">
+                <div class="body"><!-- issue_comment -->
+                    <span class="mega-octicon octicon-@activity.activityType"></span>
+                    <div class="time">
+                        <time class="js-relative-date" data-title-format="@activity.activityDate"
+                              datetime="@activity.activityDate" title="@activity.activityDate"></time>
+                    </div>
 
+                    <div class="title">
+                        <a href="/@activity.activityUserName">@activity.activityUserName</a>
+                        <span>@activity.activityType</span> on
+                        <a href="/@activity.userName/@activity.repositoryName"
+                           title="mutt: Switch from tokyo-cabinet to kyoto-cabinet.">@activity.userName/@activity.repositoryName</a>
+                    </div>
+
+                    <div class="details">
+                        <a href="https://github.com/aeroevan">
+                            <img alt="Evan McClain" class="gravatar js-avatar" data-user="44744" height="30"
+                                 src="" width="30">
+                        </a>
+                        <div class="message markdown-body">
+                            <blockquote>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
         </div>
         <div class="dashboard-sidebar">
             <div class="box box-small repos user-repos js-repo-filter" id="your_repos">

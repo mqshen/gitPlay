@@ -6,7 +6,7 @@ import scala.slick.driver.H2Driver.simple._
 trait ActivityService {
 
   def recordCreateRepositoryActivity(userName: String, repositoryName: String, activityUserName: String)(implicit s: Session): Unit =
-    ActivityDAO.create(userName, repositoryName, activityUserName, "create_repository",
+    ActivityDAO.create(userName, repositoryName, activityUserName, "repo-create",
       s"[user:${activityUserName}] created [repo:${userName}/${repositoryName}]"
     )
 

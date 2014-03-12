@@ -39,9 +39,18 @@ object ActivityDAO {
   val activities = TableQuery[ActivitiyTable]
 
   def getRecentActivities(userName: String)(implicit s: Session): List[Activity] = {
+    /*
+    val query = activities.leftJoin(WatcherDAO.watchers).on { case (t1, t2) =>
+      t1.userName === t2.userName &&
+        t1.repositoryName === t2.repositoryName}
+    .map { case (t1, t2) => t1.*}.take(30)
+    query.list
+    */
     val query = (for {
-      (activity, reposityory) <- activities leftJoin RepositoryDAO.repositories on (_.repositoryName === _.repositoryName)
-      if activity.userName.toLowerCase === userName
+      (activity, reposityory) <- activities leftJoin WatcherDAO.watchers on { case (t1, t2) =>
+        t1.repositoryName === t2.repositoryName && t1.userName === t2.userName
+      }
+      if activity.activityUserName =!= userName
     } yield (activity))
       .take(30)
     query.list

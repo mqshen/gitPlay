@@ -76,7 +76,7 @@ object RepositoryController extends Controller with Secured with WikiService wit
           createWikiRepository(user, repository.userName, repository.repositoryName)
 
           // Record activity
-          recordCreateRepositoryActivity(user.userName, repository.userName, repository.repositoryName)
+          recordCreateRepositoryActivity(user.userName, repository.repositoryName, repository.userName)
 
 
           Redirect("/")
